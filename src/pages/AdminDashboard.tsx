@@ -3,8 +3,9 @@ import { useAvaluoStore, type AvaluoStatus, type PagoStatus } from '../store/ava
 import AdminLayout from '../components/AdminLayout'
 import AdminAssistant from '../components/AdminAssistant'
 import PeritoSection from '../components/PeritoSection'
-import { Search, Filter, TrendingUp, Clock, CheckCircle, FileText, CreditCard, MapPin, DollarSign } from 'lucide-react'
+import { Search, Filter, TrendingUp, Clock, CheckCircle, FileText, CreditCard, MapPin, DollarSign, Download } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts'
+import { generateAvaluoPDF } from '../utils/pdf'
 
 const statusLabel: Record<AvaluoStatus,string> = { pendiente:'Pendiente', pendiente_pago:'Pendiente pago', pagado:'Pagado', en_revision:'En revisión', visita_agendada:'Visita agendada', tasado:'Tasado', entregado:'Entregado', rechazado:'Rechazado' }
 const statusColor: Record<AvaluoStatus,string> = {
@@ -148,6 +149,7 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
                       <div className="flex gap-1">
                         <input placeholder="Tasador" defaultValue={a.tasador||''} onBlur={e=> updateAvaluo(a.id, {tasador: e.target.value})} className="w-20 text-xs border border-stone-200 rounded-full px-2 py-1"/>
                         <input placeholder="Valor ₡" type="number" defaultValue={a.valorEstimado||''} onBlur={e=> e.target.value && updateAvaluo(a.id, {valorEstimado: Number(e.target.value)})} className="w-24 text-xs border border-stone-200 rounded-full px-2 py-1"/>
+                        <button onClick={()=> generateAvaluoPDF(a)} className="text-xs px-2 py-1 rounded-full bg-[#1a120e] text-white flex items-center gap-1"><Download className="w-3 h-3"/>PDF</button>
                         <button onClick={()=> { if(confirm('¿Eliminar?')) deleteAvaluo(a.id)}} className="text-xs px-2 py-1 rounded-full border border-rose-200 text-rose-600 hover:bg-rose-50">X</button>
                       </div>
                     </div>

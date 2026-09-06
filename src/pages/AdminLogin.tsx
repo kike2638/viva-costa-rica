@@ -48,9 +48,7 @@ export default function AdminLogin(){
                   </div>
                   {err && <div className="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">{err}</div>}
                   <button type="submit" disabled={isSubmitting} className="w-full py-3 rounded-xl bg-[#1a120e] text-white font-semibold hover:bg-black transition">Ingresar al panel</button>
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 leading-relaxed">
-                    <b>Demo:</b> <br/>Email: <code>admin@terracapital.cr</code><br/>Pass: <code>Terra2026</code>
-                  </div>
+                  <p className="text-xs text-stone-400 text-center">Acceso privado Terra Capital — solicita credenciales al propietario</p>
                 </Form>
               )}
             </Formik>
