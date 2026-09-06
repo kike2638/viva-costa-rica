@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { font-family: 'Inter', system-ui, sans-serif; }
+h1,h2,h3,h4 { font-family: 'Plus Jakarta Sans', Inter, sans-serif; }
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .glass { backdrop-filter: blur(12px); background: rgba(255,255,255,0.85); }
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
