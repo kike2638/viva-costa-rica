@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, ClipboardList, LogOut, Mountain, Home } from 'lucide-react'
+import { LayoutDashboard, ClipboardList, Building2, LogOut, Mountain, Home } from 'lucide-react'
 import { useAuthStore } from '../store/auth'
 
 export default function AdminLayout({children}:{children:React.ReactNode}){
@@ -18,6 +18,7 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
         <nav className="flex-1 p-4 space-y-1">
           <NavLink to="/admin" end className={({isActive})=> `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${isActive?'bg-white text-[#1a120e]':'text-stone-300 hover:bg-white/10 hover:text-white'}`}><LayoutDashboard className="w-4 h-4"/> Dashboard</NavLink>
           <NavLink to="/admin/avaluos" className={({isActive})=> `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${isActive?'bg-white text-[#1a120e]':'text-stone-300 hover:bg-white/10 hover:text-white'}`}><ClipboardList className="w-4 h-4"/> Avalúos</NavLink>
+          <NavLink to="/admin/propiedades" className={({isActive})=> `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium ${isActive?'bg-white text-[#1a120e]':'text-stone-300 hover:bg-white/10 hover:text-white'}`}><Building2 className="w-4 h-4"/> Propiedades</NavLink>
           <Link to="/" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-stone-400 hover:text-white"><Home className="w-4 h-4"/> Ver sitio</Link>
         </nav>
         <div className="p-4 border-t border-white/10">

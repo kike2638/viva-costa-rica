@@ -8,6 +8,7 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
+import AdminPropiedades from './pages/AdminPropiedades'
 import { useAuthStore } from './store/auth'
 
 function Protected({children}:{children:React.ReactNode}){
@@ -48,6 +49,7 @@ export default function App(){
         <Route path="/admin/login" element={<AdminLoginIsolated/>}/>
         <Route path="/admin" element={<Protected><AdminDashboard mode="dashboard"/></Protected>}/>
         <Route path="/admin/avaluos" element={<Protected><AdminDashboard mode="list"/></Protected>}/>
+        <Route path="/admin/propiedades" element={<Protected><AdminPropiedades/></Protected>}/>
         {/* Área pública */}
         <Route path="/*" element={<PublicLayout/>}/>
       </Routes>
