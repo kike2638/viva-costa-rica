@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useAvaluoStore, type AvaluoStatus, type PagoStatus } from '../store/avaluos'
 import AdminLayout from '../components/AdminLayout'
 import AdminAssistant from '../components/AdminAssistant'
+import PeritoSection from '../components/PeritoSection'
 import { Search, Filter, TrendingUp, Clock, CheckCircle, FileText, CreditCard, MapPin, DollarSign } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts'
 
@@ -76,9 +77,16 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
             <div className="bg-white border border-stone-200 rounded-2xl p-5">
               <h3 className="font-semibold text-sm text-stone-900 mb-3">Modalidad (gratis vs pago)</h3>
               <div className="h-[220px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={byModalidad}><CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4"/><XAxis dataKey="tipo" tick={{fontSize:12}}/><YAxis tick={{fontSize:12}}/><Tooltip/><Bar dataKey="count" fill="#8c6239" radius={[8,8,0,0]}/></BarChart></ResponsiveContainer></div>
-              <p className="text-xs text-stone-500 mt-2">Virtual = gratis (sin visita). Presencial/Hipotecario = con desplazamiento y pago previo.</p>
+              <p className="text-xs text-stone-500 mt-2">Virtual = gratis (fotos cliente, sin despl.). Presencial/Hipotecario = con visita San Ramón.</p>
             </div>
           </div>
+          <details className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 open:bg-white">
+            <summary className="font-bold text-sm text-stone-900 cursor-pointer list-none flex items-center justify-between">🔒 Perito 20 años — exclusivo SuperAdmin (click para ver) <span className="text-xs text-stone-500">CFIA IC-11247 · 1.850 informes</span></summary>
+            <div className="mt-4"><PeritoSection/></div>
+            <div className="mt-3 bg-sky-50 border border-sky-200 rounded-xl p-3 text-xs text-sky-800">
+              <b>Bancos (hipotecario):</b> el virtual <b>NO es válido SUGEF</b>. Para hipotecario debes derivar a perito físico CFIA (tú como gestor San Ramón + perito firmante). Flujo: cliente pide hipotecario → cobras → asignas a <b>Ing. Patricia Mora (física, visita)</b> → ella firma informe. Tú facturas y le pagas honorario (ej. 60/40). Así no necesitas ser perito aún.
+            </div>
+          </details>
         </>
       )}
 

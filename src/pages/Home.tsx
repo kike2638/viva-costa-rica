@@ -4,7 +4,6 @@ import { ArrowRight, ShieldCheck, Search, BadgeCheck, TrendingUp } from 'lucide-
 import PropertyCard from '../components/PropertyCard'
 import EvaluationForm from '../components/EvaluationForm'
 import Testimonials from '../components/Testimonials'
-import PeritoSection from '../components/PeritoSection'
 import { PROPERTIES } from '../utils/constants'
 
 export default function Home(){
@@ -90,8 +89,7 @@ export default function Home(){
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 space-y-8">
-        <PeritoSection/>
+      <div className="max-w-7xl mx-auto px-4">
         <Testimonials/>
       </div>
     </div>
