@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img">
+  <rect width="120" height="120" rx="24" fill="#1a120e"/>
+  <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d4a574"/><stop offset="100%" stop-color="#8c6239"/></linearGradient></defs>
+  <path d="M18 78 L60 32 L102 78 Z" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M22 92 L60 52 L98 92 Z" fill="#8c6239"/>
+  <text x="60" y="82" text-anchor="middle" font-family="Plus Jakarta Sans, Inter, sans-serif" font-weight="800" font-size="34" fill="white">T</text>
+</svg>
