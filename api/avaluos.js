@@ -24,8 +24,8 @@ export default async function handler(req, res) {
         const b = req.body;
         const id = `AV-${Date.now().toString().slice(-6)}`;
         await sql`
-          INSERT INTO avaluos (id, nombre, email, telefono, direccion, superficie, tipo, descripcion, modalidad, urgencia, status, pago_status, costo_total, desplazamiento_costo)
-          VALUES (${id}, ${b.nombre}, ${b.email}, ${b.telefono}, ${b.direccion}, ${b.superficie}, ${b.tipo}, ${b.descripcion}, ${b.modalidad}, ${b.urgencia}, ${b.status||'pendiente_pago'}, ${b.pagoStatus||'pendiente'}, ${b.costoTotal||0}, ${b.desplazamientoCosto||0})
+          INSERT INTO avaluos (id, nombre, email, telefono, direccion, superficie, tipo, descripcion, modalidad, urgencia, status, pago_status, costo_total, desplazamiento_costo, metodologia, doc_completitud)
+          VALUES (${id}, ${b.nombre}, ${b.email}, ${b.telefono}, ${b.direccion}, ${b.superficie}, ${b.tipo}, ${b.descripcion}, ${b.modalidad}, ${b.urgencia}, ${b.status||'pendiente_pago'}, ${b.pagoStatus||'pendiente'}, ${b.costoTotal||0}, ${b.desplazamientoCosto||0}, ${b.metodologia||''}, ${b.docCompletitud||0})
         `;
         return res.status(201).json({ id });
       }

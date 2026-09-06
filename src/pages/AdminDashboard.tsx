@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useAvaluoStore, type AvaluoStatus, type PagoStatus } from '../store/avaluos'
 import AdminLayout from '../components/AdminLayout'
-import { Search, Filter, TrendingUp, Clock, CheckCircle, FileText, CreditCard, MapPin, Calendar, DollarSign } from 'lucide-react'
+import AdminAssistant from '../components/AdminAssistant'
+import { Search, Filter, TrendingUp, Clock, CheckCircle, FileText, CreditCard, MapPin, DollarSign } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts'
 
 const statusLabel: Record<AvaluoStatus,string> = { pendiente:'Pendiente', pendiente_pago:'Pendiente pago', pagado:'Pagado', en_revision:'En revisión', visita_agendada:'Visita agendada', tasado:'Tasado', entregado:'Entregado', rechazado:'Rechazado' }
@@ -92,19 +93,16 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
 
         <div className="overflow-auto">
           <table className="w-full text-sm">
-            <thead><tr className="text-xs text-stone-500 border-b border-stone-200"><th className="text-left py-2 px-2">ID / Modalidad</th><th className="text-left">Cliente</th><th className="text-left">Dirección + costo</th><th className="text-left">Pago</th><th className="text-left">Estado</th><th className="text-left">Visita</th><th className="text-right">Acciones</th></tr></thead>
+            <thead><tr className="text-xs text-stone-500 border-b border-stone-200"><th className="text-left py-2 px-2">ID / Modalidad</th><th className="text-left">Cliente</th><th className="text-left">Dirección + costo</th><th className="text-left">Metodología / Docs</th><th className="text-left">Pago</th><th className="text-left">Estado</th><th className="text-right">Acciones</th></tr></thead>
             <tbody>
               {(mode==='dashboard'? filtered.slice(0,6): filtered).map(a=>(
                 <tr key={a.id} className="border-b border-stone-100 hover:bg-stone-50">
                   <td className="py-3 px-2"><div className="font-mono text-xs font-semibold">{a.id}</div><div className="text-xs capitalize px-2 py-0.5 rounded-full bg-stone-900 text-white inline-block mt-1">{a.modalidad}</div></td>
                   <td><div className="font-medium text-stone-900">{a.nombre}</div><div className="text-xs text-stone-500">{a.email} · {a.telefono}</div></td>
                   <td className="max-w-[240px]"><div className="text-stone-700 flex items-center gap-1"><MapPin className="w-3 h-3 shrink-0"/>{a.direccion}</div><div className="text-xs text-stone-500">{a.superficie} m² · {a.tipo} · <span className="font-semibold text-[#8c6239]">₡{a.costoTotal.toLocaleString('es-CR')}</span> {a.desplazamientoCosto>0 && `(despl. ₡${a.desplazamientoCosto.toLocaleString('es-CR')})`}</div></td>
+                  <td className="max-w-[160px]"><div className="text-xs font-medium text-stone-700">{a.metodologia}</div><div className={`text-xs mt-1 px-2 py-0.5 rounded-full inline-block border ${a.docCompletitud===100?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-amber-50 text-amber-700 border-amber-200'}`}>Docs {a.docCompletitud}% {a.docCompletitud<100 && '⚠'}</div><div className="text-xs text-stone-400 truncate">{Object.keys(a.documentos||{}).join(', ')||'—'}</div></td>
                   <td><span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${pagoColor[a.pagoStatus]}`}>{a.pagoStatus==='no_aplica'?'GRATIS':a.pagoStatus}</span>{a.metodoPago && <div className="text-xs text-stone-500 mt-1">{a.metodoPago}</div>}</td>
                   <td><span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusColor[a.status]}`}>{statusLabel[a.status]}</span></td>
-                  <td>
-                    {a.fechaVisita ? <span className="flex items-center gap-1 text-xs"><Calendar className="w-3 h-3"/>{a.fechaVisita}</span> : <span className="text-xs text-stone-400">—</span>}
-                    {a.status==='pagado' && !a.fechaVisita && <div className="text-xs text-amber-600">Agendar fecha</div>}
-                  </td>
                   <td className="text-right">
                     <div className="flex flex-col gap-1 items-end">
                       <div className="flex gap-1 flex-wrap justify-end">
@@ -134,18 +132,21 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
         </div>
       </div>
 
-      <div className="mt-4 space-y-3">
-        <div className="text-xs text-stone-700 bg-white border border-stone-200 rounded-xl p-4">
-          <b className="text-stone-900">Flujo comercial Terra Capital (con desplazamiento):</b>
-          <ol className="list-decimal list-inside mt-2 space-y-1 text-stone-600">
-            <li><b>Virtual (gratis):</b> rango estimado sin visita, sin desplazamiento, entrega 24h por email. No válido para bancos.</li>
-            <li><b>Presencial / Hipotecario (pago):</b> costo base ₡45k / ₡95k + desplazamiento desde San Ramón (Palmares 5k, Grecia 8k, Alajuela 12k, Heredia 18k, San José 22k, Cartago 28k) + express +30%. Se crea en estado <b>pendiente_pago</b>.</li>
-            <li>Admin verifica pago (SINPE 8888-9999 / tarjeta) → marca <b>pagado</b> → asigna perito 20 años (Patricia Mora IC-11247) + metodología IVS (mercado/costo/renta) → agenda <b>visita_agendada</b> → inspección → <b>tasado/entregado</b> con validez SUGEF 6 meses. Sin pago, no hay visita (experiencia 20 años: el avalúo que no cobra desplazamiento se rechaza en banco).</li>
-          </ol>
+      <div className="grid lg:grid-cols-3 gap-6 mt-6">
+        <div className="lg:col-span-2">
+          <div className="text-xs text-stone-700 bg-white border border-stone-200 rounded-xl p-4">
+            <b className="text-stone-900">Flujo 20 años (San Ramón):</b>
+            <ol className="list-decimal list-inside mt-2 space-y-1 text-stone-600">
+              <li><b>Virtual gratis:</b> sin visita, entrega 24h, no SUGEF. Metodología auto: Comparación rápida.</li>
+              <li><b>Presencial/Hipotecario:</b> ₡45k/₡95k + despl. San Ramón +30% express → <b>pendiente_pago</b>. Docs obligatorios: plano+literal+cédula (checklist).</li>
+              <li>Admin marca <b>pagado</b> → asigna perito Patricia Mora (20 años) + metodología IVS → <b>visita_agendada</b> → <b>tasado/entregado</b> 6 meses validez.</li>
+            </ol>
+          </div>
         </div>
-        <div className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-3">
-          <b>Tip 20 años + Vercel:</b> Tarifas en <code>constants.ts: DESPLAZAMIENTO_TARIFAS</code> (base San Ramón). Perito y metodologías en <code>PERITO_PRINCIPAL</code>. Conecta <code>useAvaluoStore</code> (actual <code>terra-avaluos-v3-sanramon</code>) a Vercel Postgres + Blob + Resend para producción. Informe sigue Norma IVS N°3 y Reglamento CFIA Art.10.
-        </div>
+        <div><AdminAssistant/></div>
+      </div>
+      <div className="mt-4 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-3">
+        <b>Login aislado:</b> <code>/admin/login</code> no está en nav público (Header/Footer sin link). Solo acceso directo. Protegido por <code>Protected</code> en <code>src/App.tsx:13</code> con <code>useAuthStore</code>. Persistencia actual <code>terra-avaluos-v4-perito</code> → migrar a Vercel Postgres/Blob (<code>api/avaluos.js</code> + <code>vercel.json</code>).
       </div>
     </AdminLayout>
   )

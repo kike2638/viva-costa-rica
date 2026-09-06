@@ -21,6 +21,9 @@ export interface Avaluo {
   pagoStatus: PagoStatus
   costoTotal: number
   desplazamientoCosto: number
+  metodologia: string
+  documentos: Record<string, string> // key -> fileName (persiste nombre; en Vercel sería blob URL)
+  docCompletitud: number // 0-100
   valorEstimado?: number
   tasador?: string
   fechaVisita?: string
@@ -36,9 +39,9 @@ type State = {
 }
 
 const seed: Avaluo[] = [
-  { id:'AV-1001', createdAt: new Date(Date.now()-86400000*2).toISOString(), nombre:'María Fernández', email:'maria@email.com', telefono:'+506 8888 1111', direccion:'San Ramón Centro, casa 320m²', superficie:320, tipo:'casa', descripcion:'Casa 4 hab, lujo', modalidad:'virtual', urgencia:'normal', status:'entregado', pagoStatus:'no_aplica', costoTotal:0, desplazamientoCosto:0, valorEstimado:245000000, tasador:'Jorge Rojas' },
-  { id:'AV-1002', createdAt: new Date(Date.now()-86400000*1).toISOString(), nombre:'Carlos Méndez', email:'carlos@email.com', telefono:'+506 8888 2222', direccion:'Heredia Centro, apto 12B', superficie:115, tipo:'apartamento', descripcion:'Penthouse', modalidad:'presencial', urgencia:'express', status:'pendiente_pago', pagoStatus:'pendiente', costoTotal:76500, desplazamientoCosto:18000, tasador:'Jorge Rojas' },
-  { id:'AV-1003', createdAt: new Date().toISOString(), nombre:'Ana Soto', email:'ana@email.com', telefono:'+506 8888 3333', direccion:'Curridabat, lote 450m²', superficie:450, tipo:'lote', descripcion:'Lote esquinero', modalidad:'hipotecario', urgencia:'normal', status:'pagado', pagoStatus:'pagado', costoTotal:120000, desplazamientoCosto:25000, valorEstimado:72000000, tasador:'Laura Jiménez', fechaVisita: new Date(Date.now()+86400000*2).toISOString().slice(0,10), metodoPago:'sinpe' },
+  { id:'AV-1001', createdAt: new Date(Date.now()-86400000*2).toISOString(), nombre:'María Fernández', email:'maria@email.com', telefono:'+506 8888 1111', direccion:'San Ramón Centro, casa 320m²', superficie:320, tipo:'casa', descripcion:'Casa 4 hab, lujo', modalidad:'virtual', urgencia:'normal', status:'entregado', pagoStatus:'no_aplica', costoTotal:0, desplazamientoCosto:0, metodologia:'Comparación de Mercado (5-8 comparables)', documentos:{ plano:'plano-1001.pdf', literal:'literal-1001.pdf', cedula:'cedula-1001.pdf'}, docCompletitud:100, valorEstimado:245000000, tasador:'Ing. Patricia Mora Soto' },
+  { id:'AV-1002', createdAt: new Date(Date.now()-86400000*1).toISOString(), nombre:'Carlos Méndez', email:'carlos@email.com', telefono:'+506 8888 2222', direccion:'Heredia Centro, apto 12B', superficie:115, tipo:'apartamento', descripcion:'Penthouse', modalidad:'presencial', urgencia:'express', status:'pendiente_pago', pagoStatus:'pendiente', costoTotal:76500, desplazamientoCosto:18000, metodologia:'Comparación de Mercado (5-8 comparables)', documentos:{ plano:'plano-1002.pdf'}, docCompletitud:33, tasador:'Ing. Patricia Mora Soto' },
+  { id:'AV-1003', createdAt: new Date().toISOString(), nombre:'Ana Soto', email:'ana@email.com', telefono:'+506 8888 3333', direccion:'Curridabat, lote 450m²', superficie:450, tipo:'lote', descripcion:'Lote esquinero', modalidad:'hipotecario', urgencia:'normal', status:'pagado', pagoStatus:'pagado', costoTotal:120000, desplazamientoCosto:25000, metodologia:'Comparación + Costo', documentos:{ plano:'plano-1003.pdf', literal:'literal-1003.pdf', cedula:'cedula-1003.pdf', impuesto:'impuesto-1003.pdf'}, docCompletitud:80, valorEstimado:72000000, tasador:'Ing. Patricia Mora Soto', fechaVisita: new Date(Date.now()+86400000*2).toISOString().slice(0,10), metodoPago:'sinpe' },
 ]
 
 export const useAvaluoStore = create<State>()(persist((set,get)=> ({
@@ -54,4 +57,4 @@ export const useAvaluoStore = create<State>()(persist((set,get)=> ({
   },
   updateAvaluo: (id, patch) => set({ avaluos: get().avaluos.map(a=> a.id===id ? {...a, ...patch}: a)}),
   deleteAvaluo: (id) => set({ avaluos: get().avaluos.filter(a=> a.id!==id)}),
-}), { name: 'terra-avaluos-v3-sanramon' }))
+}), { name: 'terra-avaluos-v4-perito' }))

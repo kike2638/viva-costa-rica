@@ -57,7 +57,6 @@ export default function Header() {
             <Link to="/propiedades" className="relative hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-full border border-stone-200 text-sm font-medium hover:bg-stone-50">
               <Heart className="w-4 h-4 text-stone-600"/> <span className="hidden xl:inline">Favoritos</span> {favorites.length>0 && <span className="bg-[#8c6239] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">{favorites.length}</span>}
             </Link>
-            {!isAuthenticated && <Link to="/admin/login" className="hidden md:inline-flex items-center gap-1.5 text-stone-700 px-3 py-2 text-sm font-medium hover:text-[#8c6239]"><Shield className="w-4 h-4"/> Admin</Link>}
             {isAuthenticated && <Link to="/admin" className="hidden md:inline-flex bg-[#1a120e] text-white px-4 py-2.5 rounded-full text-sm font-semibold">Panel</Link>}
             <Link to="/evaluacion" className="hidden md:inline-flex bg-gradient-to-r from-[#8c6239] to-[#4a3320] text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow hover:shadow-md transition">
               Solicitar avalúo
@@ -75,8 +74,7 @@ export default function Header() {
             <div className="px-4 py-4 space-y-2">
               <input value={filters.search} onChange={e=> setFilters({search:e.target.value})} placeholder="Buscar..." className="w-full px-4 py-2.5 bg-stone-100 rounded-xl text-sm outline-none"/>
               {links.map(l=> <NavLink key={l.to} to={l.to} onClick={()=>setOpen(false)} className={({isActive})=>`block px-4 py-3 rounded-xl text-sm font-medium ${isActive?'bg-[#1a120e] text-white':'bg-stone-50 text-stone-700'}`}>{l.label}</NavLink>)}
-              <Link to="/evaluacion" onClick={()=>setOpen(false)} className="block text-center bg-[#8c6239] text-white px-4 py-3 rounded-xl font-semibold">Solicitar avalúo gratuito</Link>
-              <Link to="/admin/login" onClick={()=>setOpen(false)} className="block text-center border border-stone-200 px-4 py-3 rounded-xl font-semibold">SuperAdmin</Link>
+              <Link to="/evaluacion" onClick={()=>setOpen(false)} className="block text-center bg-[#8c6239] text-white px-4 py-3 rounded-xl font-semibold">Solicitar avalúo</Link>
             </div>
           </motion.div>
         )}

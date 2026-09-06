@@ -192,3 +192,26 @@ export const calcularCostoAvaluo = (modalidad: AvaluoModalidad, direccion: strin
   const urg = urgencia==='express' ? Math.round(base*0.3) : 0
   return base + despl + urg
 }
+
+// === CHECKLIST + METODOLOGÍA AUTO (20 años) ===
+export const DOCS_REQUERIDOS = [
+  { key:'plano', label:'Plano catastrado vigente', required: true, accept: '.pdf,.jpg,.png' },
+  { key:'literal', label:'Certificación literal Registro (<30d)', required: true, accept: '.pdf,.jpg,.png' },
+  { key:'cedula', label:'Cédula / personería', required: true, accept: '.pdf,.jpg,.png' },
+  { key:'impuesto', label:'Recibo impuesto bienes inmuebles', required: false, accept: '.pdf,.jpg,.png' },
+  { key:'planosConst', label:'Planos constructivos (si hay)', required: false, accept: '.pdf,.dwg' },
+  { key:'recibos', label:'Recibos servicios (agua/luz)', required: false, accept: '.pdf,.jpg,.png' },
+] as const
+
+export const getMetodologiaRecomendada = (tipo: string, modalidad: AvaluoModalidad): string => {
+  if (tipo==='lote') return 'Comparación de Mercado (homologación) + Costo'
+  if (tipo==='casa' || tipo==='apartamento' || tipo==='condo') return 'Comparación de Mercado (5-8 comparables)'
+  if (tipo==='villa') return 'Comparación + Costo de Reposición'
+  // comercial / inversión
+  return modalidad==='hipotecario' ? 'Comparación + Costo (SUGEF independiente)' : 'Comparación de Mercado'
+}
+export const getEnfoquesRequeridos = (tipo: string): string[] => {
+  if (tipo==='lote') return ['Comparación de Mercado','Costo']
+  if (['casa','apartamento','condo','villa'].includes(tipo)) return ['Comparación de Mercado','Costo de Reposición']
+  return ['Comparación de Mercado']
+}

@@ -29,7 +29,6 @@ function PublicLayout(){
           <Route path="/evaluacion" element={<Evaluation/>}/>
           <Route path="/sobre" element={<About/>}/>
           <Route path="/contacto" element={<Contact/>}/>
-          <Route path="/admin/login" element={<AdminLogin/>}/>
           <Route path="*" element={<div className="max-w-7xl mx-auto px-4 py-20 text-center"><h1 className="text-2xl font-bold">Página no encontrada</h1></div>}/>
         </Routes>
       </main>
@@ -38,12 +37,18 @@ function PublicLayout(){
   )
 }
 
+// Login totalmente aislado: sin Header/Footer, sin rastro en nav público
+function AdminLoginIsolated(){ return <AdminLogin/> }
+
 export default function App(){
   return (
     <BrowserRouter>
       <Routes>
+        {/* Área privada aislada */}
+        <Route path="/admin/login" element={<AdminLoginIsolated/>}/>
         <Route path="/admin" element={<Protected><AdminDashboard mode="dashboard"/></Protected>}/>
         <Route path="/admin/avaluos" element={<Protected><AdminDashboard mode="list"/></Protected>}/>
+        {/* Área pública */}
         <Route path="/*" element={<PublicLayout/>}/>
       </Routes>
     </BrowserRouter>

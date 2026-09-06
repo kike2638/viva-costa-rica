@@ -24,7 +24,7 @@ export default function Footer() {
               <li><Link to="/evaluacion" className="hover:text-white">Avalúos</Link></li>
               <li><Link to="/sobre" className="hover:text-white">Sobre nosotros</Link></li>
               <li><Link to="/contacto" className="hover:text-white">Contacto</Link></li>
-              <li><Link to="/admin/login" className="hover:text-white text-amber-400">SuperAdmin →</Link></li>
+              <li><span className="text-stone-600 text-xs">Acceso privado SuperAdmin: /admin/login</span></li>
             </ul>
           </div>
           <div>
