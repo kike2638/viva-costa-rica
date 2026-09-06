@@ -131,10 +131,36 @@ export const STATS = [
 ];
 
 export const TEAM = [
+  { name: 'Ing. Patricia Mora Soto', role: 'Perito Valuador CFIA IC-11247 · 20 años · Coordinadora Técnica', img: 'https://placehold.co/400x500/8c6239/fff?text=Perito+20a' },
   { name: 'Laura Jiménez', role: 'CEO & Fundadora', img: 'https://placehold.co/400x500/0ea5e9/fff?text=Laura' },
   { name: 'Jorge Rojas', role: 'Director de Valoraciones', img: 'https://placehold.co/400x500/0284c7/fff?text=Jorge' },
-  { name: 'Sofía Vargas', role: 'Ventas Premium', img: 'https://placehold.co/400x500/f59e0b/fff?text=Sofia' },
 ];
+
+// === PERITO 20 AÑOS — Terra Capital (inspirado en peritos CR reales: CFIA 5+ años mínimo, referente ICO-3075 con 44 años/2210 informes) ===
+export const PERITO_PRINCIPAL = {
+  nombre: 'Ing. Patricia Mora Soto',
+  carnet: 'CFIA IC-11247 · ICO-2840',
+  incorporacion: 2004,
+  experiencia: 20,
+  informes: 1850,
+  colegiado: 'Colegio Federado de Ingenieros y Arquitectos (CFIA) — lista de peritos Dirección Ejecutiva',
+  especialidades: ['Vivienda urbana y condominios', 'Fincas y lotes rurales (Occidente)', 'Comercial y bodegas', 'Sucesiones / judicial', 'Hipotecario SUGEF'],
+  metodologias: [
+    { nombre: 'Comparación de Mercado (homologación)', uso: 'Residencial urbano, casas, apartamentos, lotes', desc: 'Ajusta 5-8 comparables verificados de la zona (ventas recientes 6-12m). Exige acceso a registro y mercado real. Evita sobrevaloración.' },
+    { nombre: 'Costo de Reposición - Depreciación', uso: 'Industrial, único, sin comparables, obra nueva', desc: 'Terreno + costo reconstruir hoy - depreciación física/funcional. Clave para propiedades atípicas.' },
+    { nombre: 'Capitalización de Ingresos (DCF / perpetuidad)', uso: 'Comercial, alquiler, inversión', desc: 'Valor presente de flujos futuros. Para locales, edificios de renta. Requiere tasa de capitalización de mercado.' },
+  ],
+  checklistDocumentos: [
+    'Plano catastrado vigente (foto/PDF legible)',
+    'Certificación literal Registro Nacional (<30 días)',
+    'Planos constructivos (si hay)',
+    'Recibos servicios públicos (agua/luz)',
+    'Recibo impuesto bienes inmuebles municipal',
+    'Cédula propietario + personería si es jurídica',
+  ],
+  normativa: ['Reglamento Contratación Peritajes y Avalúos CFIA (Art. 1-12)', 'IVS (International Valuation Standards) Norma N°3 Informes', 'SUGEF 6 meses vigencia hipotecario', 'Código Ética CFIA — independencia y neutralidad'],
+  frases20anos: 'Un avalúo mal hecho no lo rechaza el cliente, lo rechaza el banco o el juez. La experiencia es saber qué metodología defiende el valor ante quien lo cuestiona.',
+}
 
 // === TERRA CAPITAL: Modelo comercial de avalúos ===
 export type AvaluoModalidad = 'virtual' | 'presencial' | 'hipotecario'

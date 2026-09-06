@@ -56,7 +56,7 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
       {mode==='dashboard' && (
         <>
           <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div><h1 className="text-2xl font-extrabold text-stone-900">Dashboard — Terra Capital</h1><p className="text-sm text-stone-500">Avalúos con control de desplazamiento y pago previo a visita</p></div>
+            <div><h1 className="text-2xl font-extrabold text-stone-900">Dashboard — Terra Capital</h1><p className="text-sm text-stone-500">Perito 20 años · Base San Ramón · Control desplazamiento y pago previo</p></div>
             <a href="/evaluacion" target="_blank" className="px-4 py-2 rounded-full bg-[#8c6239] text-white text-sm font-semibold">+ Nuevo avalúo (sitio)</a>
           </div>
 
@@ -139,12 +139,12 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
           <b className="text-stone-900">Flujo comercial Terra Capital (con desplazamiento):</b>
           <ol className="list-decimal list-inside mt-2 space-y-1 text-stone-600">
             <li><b>Virtual (gratis):</b> rango estimado sin visita, sin desplazamiento, entrega 24h por email. No válido para bancos.</li>
-            <li><b>Presencial / Hipotecario (pago):</b> costo base ₡45k / ₡95k + desplazamiento (GAM ₡0, Heredia/Alajuela ₡15k, Cartago ₡20k, Jacó ₡35k) + express +30%. Se crea en estado <b>pendiente_pago</b>.</li>
-            <li>Admin verifica pago (SINPE 8888-9999 / tarjeta / transferencia) → marca <b>pagado</b> → agenda <b>visita_agendada</b> con fecha → visita → <b>tasado/entregado</b>. Si no hay pago, no se desplaza.</li>
+            <li><b>Presencial / Hipotecario (pago):</b> costo base ₡45k / ₡95k + desplazamiento desde San Ramón (Palmares 5k, Grecia 8k, Alajuela 12k, Heredia 18k, San José 22k, Cartago 28k) + express +30%. Se crea en estado <b>pendiente_pago</b>.</li>
+            <li>Admin verifica pago (SINPE 8888-9999 / tarjeta) → marca <b>pagado</b> → asigna perito 20 años (Patricia Mora IC-11247) + metodología IVS (mercado/costo/renta) → agenda <b>visita_agendada</b> → inspección → <b>tasado/entregado</b> con validez SUGEF 6 meses. Sin pago, no hay visita (experiencia 20 años: el avalúo que no cobra desplazamiento se rechaza en banco).</li>
           </ol>
         </div>
         <div className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-3">
-          <b>Tip operativo:</b> Configura tarifas en <code>src/utils/constants.ts: AVALUO_MODALIDADES / DESPLAZAMIENTO_TARIFAS</code> y conecta `useAvaluoStore` a Supabase/ Stripe / SINPE API. El store ya persiste en `localStorage: terra-avaluos-v2`.
+          <b>Tip 20 años + Vercel:</b> Tarifas en <code>constants.ts: DESPLAZAMIENTO_TARIFAS</code> (base San Ramón). Perito y metodologías en <code>PERITO_PRINCIPAL</code>. Conecta <code>useAvaluoStore</code> (actual <code>terra-avaluos-v3-sanramon</code>) a Vercel Postgres + Blob + Resend para producción. Informe sigue Norma IVS N°3 y Reglamento CFIA Art.10.
         </div>
       </div>
     </AdminLayout>
