@@ -19,6 +19,7 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
   const { avaluos, updateAvaluo, deleteAvaluo } = useAvaluoStore()
   const [q,setQ]=useState('')
   const [f,setF]=useState<AvaluoStatus|'todos'>('todos')
+  const [expanded,setExpanded]=useState<string|null>(null)
 
   const filtered = useMemo(()=> avaluos.filter(a=>{
     if(f!=='todos' && a.status!==f) return false
@@ -125,7 +126,19 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
                           <option value="pendiente">Pendiente</option><option value="pendiente_pago">Pendiente pago</option><option value="pagado">Pagado</option><option value="visita_agendada">Visita agendada</option><option value="en_revision">En revisión</option><option value="tasado">Tasado</option><option value="entregado">Entregado</option><option value="rechazado">Rechazado</option>
                         </select>
                         {a.pagoStatus==='pendiente' && <button onClick={()=> handleMarcarPagado(a.id)} className="text-xs px-3 py-1 rounded-full bg-emerald-600 text-white hover:bg-emerald-700">Marcar pagado</button>}
+                        <button onClick={()=> setExpanded(expanded===a.id? null : a.id)} className="text-xs px-2 py-1 rounded-full bg-[#1a120e] text-white">{expanded===a.id?'Cerrar':'Medidas'}</button>
                       </div>
+                      {expanded===a.id && (
+                        <div className="w-full bg-stone-50 border border-stone-200 rounded-xl p-2 grid grid-cols-2 gap-1 mt-1">
+                          <input placeholder="Área terreno m²" type="number" defaultValue={a.areaTerreno||''} onBlur={e=> updateAvaluo(a.id, {areaTerreno: Number(e.target.value)})} className="px-2 py-1 border rounded-lg text-xs"/>
+                          <input placeholder="Área constr m²" type="number" defaultValue={a.areaConstruccion||''} onBlur={e=> updateAvaluo(a.id, {areaConstruccion: Number(e.target.value)})} className="px-2 py-1 border rounded-lg text-xs"/>
+                          <input placeholder="Año const" type="number" defaultValue={a.anioConstruccion||''} onBlur={e=> updateAvaluo(a.id, {anioConstruccion: Number(e.target.value)})} className="px-2 py-1 border rounded-lg text-xs"/>
+                          <select defaultValue={a.usoSuelo||'Residencial'} onBlur={e=> updateAvaluo(a.id, {usoSuelo: (e.target as HTMLSelectElement).value})} className="px-2 py-1 border rounded-lg text-xs"><option>Residencial</option><option>Comercial</option><option>Mixto</option><option>Agrícola</option></select>
+                          <input placeholder="Materiales/acabados" defaultValue={a.materiales||''} onBlur={e=> updateAvaluo(a.id, {materiales: e.target.value})} className="col-span-2 px-2 py-1 border rounded-lg text-xs"/>
+                          <input placeholder="N° Plano" defaultValue={a.numeroPlano||''} onBlur={e=> updateAvaluo(a.id, {numeroPlano: e.target.value})} className="px-2 py-1 border rounded-lg text-xs"/>
+                          <input placeholder="Folio real" defaultValue={a.folioReal||''} onBlur={e=> updateAvaluo(a.id, {folioReal: e.target.value})} className="px-2 py-1 border rounded-lg text-xs"/>
+                        </div>
+                      )}
                       <div className="flex gap-1">
                         <select value={a.pagoStatus} onChange={e=> updateAvaluo(a.id, {pagoStatus: e.target.value as PagoStatus})} className="text-xs border border-stone-200 rounded-full px-2 py-1 bg-white">
                           <option value="no_aplica">Gratis</option><option value="pendiente">Pendiente</option><option value="pagado">Pagado</option><option value="reembolsado">Reembolsado</option>

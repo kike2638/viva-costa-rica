@@ -66,7 +66,7 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
           setNewId(id); setLastCosto(costo); setLastModalidad(values.modalidad); setSubmitting(false); setOk(true); resetForm(); setFiles({});
         }, 700)
       }}>
-        {({isSubmitting, values, setFieldValue})=>{
+        {({isSubmitting, values})=>{
           const costoPreview = useMemo(()=> calcularCostoAvaluo(values.modalidad as AvaluoModalidad, values.direccion || '', values.urgencia as any), [values.modalidad, values.direccion, values.urgencia])
           const desplPreview = values.modalidad==='virtual' ? 0 : getDesplazamientoCosto(values.direccion || '')
           const base = AVALUO_MODALIDADES.find(m=>m.value===values.modalidad)
@@ -107,31 +107,26 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
             </div>
             <div><label className="text-xs font-semibold">Dirección *</label><Field name="direccion" placeholder="Cantón, distrito, señas" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="direccion" component="div" className="text-xs text-rose-500 mt-1"/><div className="text-xs text-stone-400 mt-1 flex items-center gap-1"><MapPin className="w-3 h-3"/> Desde San Ramón</div></div>
 
-            {/* Datos registrales y constructivos */}
-            <div className="border border-amber-200 bg-amber-50 rounded-xl p-4">
-              <div className="font-semibold text-sm text-amber-900">Datos registrales y constructivos — para avalúo completo</div>
-              <p className="text-xs text-amber-800 mt-1">Carga el <b>plano archivo</b> <i>o</i> escribe <b>N° plano + folio real</b>. Si tiene construcción, completa áreas/materiales.</p>
-              <div className="grid md:grid-cols-2 gap-3 mt-3">
-                <div><label className="text-xs font-semibold">N° Plano catastrado</label><Field name="numeroPlano" placeholder="A-123456-2024" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/><div className="text-xs text-stone-500">o sube archivo abajo</div></div>
-                <div><label className="text-xs font-semibold">Folio real / Matrícula</label><Field name="folioReal" placeholder="1-123456-000" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/><div className="text-xs text-stone-500">o sube literal</div></div>
-                <div><label className="text-xs font-semibold">Área terreno (m²)</label><Field name="areaTerreno" placeholder="Ej. 320" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/></div>
-                <div>
-                  <label className="text-xs font-semibold">¿Tiene construcción?</label>
-                  <div className="flex gap-2 mt-1"><label className="flex items-center gap-1 text-sm"><Field type="checkbox" name="tieneConstruccion" checked={values.tieneConstruccion} onChange={(e:any)=> setFieldValue('tieneConstruccion', e.target.checked)} /> Sí</label></div>
-                </div>
-                {values.tieneConstruccion && (
-                  <>
-                    <div><label className="text-xs font-semibold">Área construcción (m²)</label><Field name="areaConstruccion" placeholder="Ej. 180" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/></div>
-                    <div><label className="text-xs font-semibold">Año construcción</label><Field name="anioConstruccion" placeholder="2018" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/></div>
-                    <div><label className="text-xs font-semibold">Materiales/acabados</label><Field name="materiales" placeholder="Block, teja, porcelanato..." className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/></div>
-                    <div><label className="text-xs font-semibold">Uso suelo</label><Field as="select" name="usoSuelo" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"><option>Residencial</option><option>Comercial</option><option>Mixto</option><option>Agrícola</option></Field></div>
-                  </>
-                )}
+            {/* Datos registrales — simplificado para gratis */}
+            <div className={`border rounded-xl p-4 ${values.modalidad==='virtual' ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}>
+              <div className={`font-semibold text-sm ${values.modalidad==='virtual' ? 'text-emerald-900' : 'text-amber-900'}`}>
+                {values.modalidad==='virtual' ? 'Datos mínimos — avalúo GRATIS' : 'Datos registrales y constructivos — avalúo completo (admin)'}
               </div>
-              <div className="grid md:grid-cols-2 gap-4 mt-3">
-                <div><label className="text-xs font-semibold">Superficie referencia (m²) *</label><Field name="superficie" placeholder="Total" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/><ErrorMessage name="superficie" component="div" className="text-xs text-rose-500 mt-1"/></div>
+              <p className="text-xs mt-1" style={{color: values.modalidad==='virtual' ? '#065f46' : '#92400e'}}>
+                {values.modalidad==='virtual' ? 'Solo fotos + N° plano/folio + superficie. Lo técnico detallado lo completas tú en SuperAdmin.' : 'Carga plano o N° + folio. Construcción con áreas/acabados para medición real (solo SuperAdmin edita a fondo).'}
+              </p>
+              <div className="grid md:grid-cols-2 gap-3 mt-3">
+                <div><label className="text-xs font-semibold">N° Plano</label><Field name="numeroPlano" placeholder="A-123456-2024" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/><div className="text-xs text-stone-500">o archivo abajo</div></div>
+                <div><label className="text-xs font-semibold">Folio real</label><Field name="folioReal" placeholder="1-123456-000" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/><div className="text-xs text-stone-500">o archivo</div></div>
+                <div><label className="text-xs font-semibold">Superficie (m²) *</label><Field name="superficie" placeholder="Ej. 320" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/><ErrorMessage name="superficie" component="div" className="text-xs text-rose-500 mt-1"/></div>
                 <div><label className="text-xs font-semibold flex items-center gap-1"><Clock className="w-3 h-3"/> Urgencia</label><Field as="select" name="urgencia" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"><option value="normal">Normal (72h)</option><option value="express">Express 24h (+30%)</option></Field></div>
               </div>
+              {values.modalidad!=='virtual' && (
+                <div className="mt-3 p-3 bg-white border border-stone-200 rounded-xl">
+                  <div className="text-xs font-semibold text-stone-700">Parámetros reales medibles — solo SuperAdmin (referencia)</div>
+                  <p className="text-xs text-stone-500">Estos los completas tú en panel después de la solicitud: área terreno/construcción, año, materiales, pisos, acabados, uso suelo. Cliente no necesita llenarlos para el gratis.</p>
+                </div>
+              )}
             </div>
 
             <div className="border border-stone-200 rounded-xl p-4 bg-stone-50">
