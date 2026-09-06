@@ -195,12 +195,12 @@ export const calcularCostoAvaluo = (modalidad: AvaluoModalidad, direccion: strin
 
 // === CHECKLIST + METODOLOGÍA AUTO (20 años) ===
 export const DOCS_REQUERIDOS = [
-  { key:'fotos', label:'Fotos y video del inmueble (cliente)', required: true, accept: '.jpg,.png,.mp4,.heic' },
-  { key:'plano', label:'Plano catastrado vigente', required: true, accept: '.pdf,.jpg,.png' },
-  { key:'literal', label:'Certificación literal Registro (<30d)', required: true, accept: '.pdf,.jpg,.png' },
+  { key:'fotos', label:'Fotos y video del inmueble (cliente)', required: true, accept: '.jpg,.png,.mp4,.heic', note:'Obligatorio para GRATIS sin visita' },
+  { key:'plano', label:'Plano catastrado (PDF/foto) — o ingresa N° plano abajo', required: true, accept: '.pdf,.jpg,.png', note:'Si no tienes archivo, escribe N° plano + folio' },
+  { key:'literal', label:'Certificación literal (<30d)', required: true, accept: '.pdf,.jpg,.png', note:'O folio real escrito' },
   { key:'cedula', label:'Cédula / personería', required: true, accept: '.pdf,.jpg,.png' },
   { key:'impuesto', label:'Recibo impuesto bienes inmuebles', required: false, accept: '.pdf,.jpg,.png' },
-  { key:'planosConst', label:'Planos constructivos (si hay)', required: false, accept: '.pdf,.dwg' },
+  { key:'planosConst', label:'Planos constructivos (si hay construcción)', required: false, accept: '.pdf,.dwg' },
   { key:'recibos', label:'Recibos servicios (agua/luz)', required: false, accept: '.pdf,.jpg,.png' },
 ] as const
 

@@ -107,7 +107,14 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
                 <tr key={a.id} className="border-b border-stone-100 hover:bg-stone-50">
                   <td className="py-3 px-2"><div className="font-mono text-xs font-semibold">{a.id}</div><div className="text-xs capitalize px-2 py-0.5 rounded-full bg-stone-900 text-white inline-block mt-1">{a.modalidad}</div></td>
                   <td><div className="font-medium text-stone-900">{a.nombre}</div><div className="text-xs text-stone-500">{a.email} · {a.telefono}</div></td>
-                  <td className="max-w-[240px]"><div className="text-stone-700 flex items-center gap-1"><MapPin className="w-3 h-3 shrink-0"/>{a.direccion}</div><div className="text-xs text-stone-500">{a.superficie} m² · {a.tipo} · <span className="font-semibold text-[#8c6239]">₡{a.costoTotal.toLocaleString('es-CR')}</span> {a.desplazamientoCosto>0 && `(despl. ₡${a.desplazamientoCosto.toLocaleString('es-CR')})`}</div></td>
+                  <td className="max-w-[260px]">
+                    <div className="text-stone-700 flex items-center gap-1"><MapPin className="w-3 h-3 shrink-0"/>{a.direccion}</div>
+                    <div className="text-xs text-stone-500">{a.superficie} m² · {a.tipo} · <span className="font-semibold text-[#8c6239]">₡{a.costoTotal.toLocaleString('es-CR')}</span> {a.desplazamientoCosto>0 && `(despl. ₡${a.desplazamientoCosto.toLocaleString('es-CR')})`}</div>
+                    <div className="text-xs text-stone-600 mt-1 bg-stone-50 border border-stone-200 rounded-lg p-1.5">
+                      <div><b>Plano:</b> {a.numeroPlano || a.documentos?.plano || '—'} · <b>Folio:</b> {a.folioReal || a.documentos?.folioReal || '—'}</div>
+                      <div><b>Terreno:</b> {a.areaTerreno||a.superficie} m² · <b>Constr:</b> {a.areaConstruccion||0} m² {a.tieneConstruccion ? `· ${a.anioConstruccion||'—'} · ${a.materiales||'—'}` : '· Lote sin construcción'} · <b>Uso:</b> {a.usoSuelo||'—'}</div>
+                    </div>
+                  </td>
                   <td className="max-w-[160px]"><div className="text-xs font-medium text-stone-700">{a.metodologia}</div><div className={`text-xs mt-1 px-2 py-0.5 rounded-full inline-block border ${a.docCompletitud===100?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-amber-50 text-amber-700 border-amber-200'}`}>Docs {a.docCompletitud}% {a.docCompletitud<100 && '⚠'}</div><div className="text-xs text-stone-400 truncate">{Object.keys(a.documentos||{}).join(', ')||'—'}</div></td>
                   <td><span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${pagoColor[a.pagoStatus]}`}>{a.pagoStatus==='no_aplica'?'GRATIS':a.pagoStatus}</span>{a.metodoPago && <div className="text-xs text-stone-500 mt-1">{a.metodoPago}</div>}</td>
                   <td><span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${statusColor[a.status]}`}>{statusLabel[a.status]}</span></td>

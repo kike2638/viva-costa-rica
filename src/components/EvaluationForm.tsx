@@ -6,14 +6,17 @@ import { useAvaluoStore } from '../store/avaluos'
 import { AVALUO_MODALIDADES, calcularCostoAvaluo, getDesplazamientoCosto, getMetodologiaRecomendada, DOCS_REQUERIDOS, type AvaluoModalidad } from '../utils/constants'
 
 const schema = Yup.object({
-  nombre: Yup.string().min(2,'Mínimo 2 caracteres').required('Requerido'),
+  nombre: Yup.string().min(2,'Mínimo 2').required('Requerido'),
   email: Yup.string().email('Email inválido').required('Requerido'),
   telefono: Yup.string().min(8,'Teléfono inválido').required('Requerido'),
   direccion: Yup.string().required('Requerido'),
-  superficie: Yup.number().typeError('Debe ser número').positive().required('Requerido'),
+  superficie: Yup.number().typeError('Número').positive().required('Requerido'),
   tipo: Yup.string().required('Requerido'),
   modalidad: Yup.string().required('Requerido'),
   descripcion: Yup.string().min(10,'Describe mejor').required('Requerido'),
+  numeroPlano: Yup.string().optional(),
+  folioReal: Yup.string().optional(),
+  areaConstruccion: Yup.number().typeError('Número').min(0).optional(),
 })
 
 export default function EvaluationForm({ compact=false }: { compact?: boolean }) {
@@ -23,69 +26,67 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
   const [lastModalidad, setLastModalidad] = useState<AvaluoModalidad>('virtual')
   const [files, setFiles] = useState<Record<string,string>>({})
   const addAvaluo = useAvaluoStore(s=>s.addAvaluo)
-
-  const onFile = (key:string, e:any) => {
-    const f = e.target.files?.[0]
-    if(f) setFiles(prev=> ({...prev, [key]: f.name}))
-  }
+  const onFile = (key:string, e:any) => { const f=e.target.files?.[0]; if(f) setFiles(p=> ({...p, [key]: f.name})) }
 
   return (
     <div className={`bg-white border border-stone-200 rounded-2xl shadow-sm p-6 ${compact?'':''}`}>
       <h3 className="font-bold text-stone-900 text-lg">Solicitar avalúo — Terra Capital</h3>
-      <p className="text-sm text-stone-500 mb-4">Perito 20 años · Base San Ramón · Metodología IVS automática</p>
+      <p className="text-sm text-stone-500 mb-4">Avalúo completo requiere plano <b>o</b> N° registro + datos de construcción</p>
       {ok ? (
         <div className="py-6 text-center">
           <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto"/>
           <div className="font-semibold text-stone-900 mt-3">¡Solicitud registrada!</div>
           <div className="mt-2 inline-flex px-3 py-1 rounded-full bg-stone-900 text-white text-xs font-mono">ID: {newId}</div>
-          {lastModalidad==='virtual' ? (
-            <p className="text-sm text-stone-600 mt-3">Modalidad <b>Virtual — GRATIS porque enviaste fotos/datos</b>. Sin desplazamiento desde San Ramón. Rango 24h (no válido SUGEF).</p>
-          ) : (
-            <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl p-3 text-left text-sm">
-              <div className="font-semibold text-amber-900">Avalúo {lastModalidad==='hipotecario'?'Hipotecario':'Presencial'} — <span className="text-[#8c6239]">₡{lastCosto.toLocaleString('es-CR')}</span></div>
-              <p className="text-xs text-amber-800 mt-1">Pendiente de pago. Tras el pago asignamos a <b>Ing. Patricia Mora Soto (20 años)</b> y agendamos visita.</p>
-            </div>
-          )}
-          <button onClick={()=> {setOk(false); setFiles({})}} className="mt-4 text-[#8c6239] text-sm font-semibold">Enviar otra solicitud</button>
+          {lastModalidad==='virtual' ? <p className="text-sm text-stone-600 mt-3">Virtual <b>GRATIS</b> (fotos/datos) — sin desplazamiento San Ramón.</p> : <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl p-3 text-left text-sm"><div className="font-semibold text-amber-900">Avalúo {lastModalidad==='hipotecario'?'Hipotecario':'Presencial'} — <span className="text-[#8c6239]">₡{lastCosto.toLocaleString('es-CR')}</span></div><p className="text-xs text-amber-800 mt-1">Pendiente de pago. Tras pago asignamos perito 20 años y agendamos visita.</p></div>}
+          <button onClick={()=> {setOk(false); setFiles({})}} className="mt-4 text-[#8c6239] text-sm font-semibold">Enviar otra</button>
         </div>
       ) : (
-      <Formik initialValues={{nombre:'', email:'', telefono:'', direccion:'', superficie:'', tipo:'casa', modalidad:'virtual' as AvaluoModalidad, descripcion:'', urgencia:'normal'}} validationSchema={schema} onSubmit={(values, {setSubmitting, resetForm})=>{
+      <Formik initialValues={{nombre:'', email:'', telefono:'', direccion:'', superficie:'', tipo:'casa', modalidad:'virtual' as AvaluoModalidad, descripcion:'', urgencia:'normal', numeroPlano:'', folioReal:'', areaTerreno:'', areaConstruccion:'', anioConstruccion:'', materiales:'', usoSuelo:'Residencial', tieneConstruccion:true}} validationSchema={schema} onSubmit={(values, {setSubmitting, resetForm})=>{
         const costo = calcularCostoAvaluo(values.modalidad as AvaluoModalidad, values.direccion, values.urgencia as any)
         const despl = values.modalidad==='virtual' ? 0 : getDesplazamientoCosto(values.direccion)
         const metodologia = getMetodologiaRecomendada(values.tipo, values.modalidad as AvaluoModalidad)
-        // completitud: requeridos presentes / total requeridos*100
         const reqKeys = DOCS_REQUERIDOS.filter(d=>d.required).map(d=>d.key)
-        const completitud = reqKeys.length ? Math.round((reqKeys.filter(k=> files[k]).length / reqKeys.length)*100) : 100
+        // para avalúo completo: plano archivo O numeroPlano+folioReal cuenta como cumplido para 'plano'/'literal'
+        const hasPlano = !!files['plano'] || !!values.numeroPlano
+        const hasLiteral = !!files['literal'] || !!values.folioReal
+        const docOk = (k:string)=> { if(k==='plano') return hasPlano; if(k==='literal') return hasLiteral; return !!files[k] }
+        const completitud = reqKeys.length ? Math.round((reqKeys.filter(k=> docOk(k)).length / reqKeys.length)*100) : 100
         setTimeout(()=>{
           const id = addAvaluo({
             nombre: values.nombre, email: values.email, telefono: values.telefono,
             direccion: values.direccion, superficie: Number(values.superficie), tipo: values.tipo,
             descripcion: values.descripcion, modalidad: values.modalidad, urgencia: values.urgencia as any,
-            costoTotal: costo, desplazamientoCosto: despl, metodologia, documentos: {...files}, docCompletitud: completitud, metodoPago: '' as any
+            numeroPlano: values.numeroPlano, folioReal: values.folioReal,
+            areaTerreno: values.areaTerreno ? Number(values.areaTerreno) : Number(values.superficie),
+            areaConstruccion: values.areaConstruccion ? Number(values.areaConstruccion) : 0,
+            anioConstruccion: values.anioConstruccion ? Number(values.anioConstruccion) : undefined,
+            materiales: values.materiales, usoSuelo: values.usoSuelo, tieneConstruccion: values.tieneConstruccion,
+            costoTotal: costo, desplazamientoCosto: despl, metodologia, documentos: {...files, ...(values.numeroPlano?{numeroPlano: values.numeroPlano}:{}), ...(values.folioReal?{folioReal: values.folioReal}:{})}, docCompletitud: completitud, metodoPago: '' as any
           })
-          setNewId(id); setLastCosto(costo); setLastModalidad(values.modalidad)
-          setSubmitting(false); setOk(true); resetForm(); setFiles({});
+          setNewId(id); setLastCosto(costo); setLastModalidad(values.modalidad); setSubmitting(false); setOk(true); resetForm(); setFiles({});
         }, 700)
       }}>
-        {({isSubmitting, values})=>{
+        {({isSubmitting, values, setFieldValue})=>{
           const costoPreview = useMemo(()=> calcularCostoAvaluo(values.modalidad as AvaluoModalidad, values.direccion || '', values.urgencia as any), [values.modalidad, values.direccion, values.urgencia])
           const desplPreview = values.modalidad==='virtual' ? 0 : getDesplazamientoCosto(values.direccion || '')
           const base = AVALUO_MODALIDADES.find(m=>m.value===values.modalidad)
           const metodologia = getMetodologiaRecomendada(values.tipo, values.modalidad as AvaluoModalidad)
-          const missingRequired = DOCS_REQUERIDOS.filter(d=> d.required).filter(d=> !files[d.key]).map(d=> d.label)
-          const isPaid = costoPreview>0
+          const hasPlano = !!files['plano'] || !!values.numeroPlano
+          const hasLiteral = !!files['literal'] || !!values.folioReal
+          const missing = []
+          if(!files['fotos']) missing.push('Fotos')
+          if(!hasPlano) missing.push('Plano o N° plano')
+          if(!hasLiteral) missing.push('Literal o folio real')
+          if(!files['cedula']) missing.push('Cédula')
           return (
           <Form className="grid gap-4">
             <div>
               <label className="text-xs font-semibold">Modalidad *</label>
               <div className="grid gap-2 mt-2">
                 {AVALUO_MODALIDADES.map(m=>(
-                  <label key={m.value} className={`flex gap-3 p-3 rounded-xl border cursor-pointer transition ${values.modalidad===m.value? 'bg-[#1a120e] text-white border-[#1a120e]' : 'bg-stone-50 border-stone-200 hover:bg-white'}`}>
+                  <label key={m.value} className={`flex gap-3 p-3 rounded-xl border cursor-pointer ${values.modalidad===m.value? 'bg-[#1a120e] text-white border-[#1a120e]' : 'bg-stone-50 border-stone-200'}`}>
                     <Field type="radio" name="modalidad" value={m.value} className="mt-1"/>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2"><span className="font-semibold text-sm">{m.label}</span><span className={`text-xs px-2 py-0.5 rounded-full font-bold ${m.value==='virtual' ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white'}`}>{m.badge}</span></div>
-                      <div className={`text-xs mt-0.5 ${values.modalidad===m.value ? 'text-stone-300':'text-stone-500'}`}>{m.desc}</div>
-                    </div>
+                    <div className="flex-1"><div className="flex items-center gap-2"><span className="font-semibold text-sm">{m.label}</span><span className={`text-xs px-2 py-0.5 rounded-full font-bold ${m.value==='virtual'?'bg-emerald-500 text-white':'bg-amber-500 text-white'}`}>{m.badge}</span></div><div className={`text-xs mt-0.5 ${values.modalidad===m.value?'text-stone-300':'text-stone-500'}`}>{m.desc}</div></div>
                   </label>
                 ))}
               </div>
@@ -93,46 +94,61 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
 
             <div className="bg-[#f4f1ec] border border-[#e8ddd0] rounded-xl p-3 flex gap-2">
               <Award className="w-5 h-5 text-[#8c6239] shrink-0"/>
-              <div>
-                <div className="text-xs font-semibold text-stone-900">Metodología IVS recomendada (20 años)</div>
-                <div className="text-sm font-bold text-[#8c6239]">{metodologia}</div>
-                <div className="text-xs text-stone-600">Auto-seleccionada según tipo <b>{values.tipo}</b> y modalidad. La perito la confirma en admin. Evita rechazo SUGEF/juzgado.</div>
-              </div>
+              <div><div className="text-xs font-semibold">Metodología IVS auto</div><div className="text-sm font-bold text-[#8c6239]">{metodologia}</div><div className="text-xs text-stone-600">Según tipo {values.tipo} y modalidad.</div></div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-              <div><label className="text-xs font-semibold">Nombre *</label><Field name="nombre" placeholder="Ej. Juan Pérez" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#a67c52]"/><ErrorMessage name="nombre" component="div" className="text-xs text-rose-500 mt-1"/></div>
-              <div><label className="text-xs font-semibold">Email *</label><Field name="email" placeholder="juan@email.com" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#a67c52]"/><ErrorMessage name="email" component="div" className="text-xs text-rose-500 mt-1"/></div>
+              <div><label className="text-xs font-semibold">Nombre *</label><Field name="nombre" placeholder="Juan Pérez" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#a67c52]"/><ErrorMessage name="nombre" component="div" className="text-xs text-rose-500 mt-1"/></div>
+              <div><label className="text-xs font-semibold">Email *</label><Field name="email" placeholder="juan@email.com" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="email" component="div" className="text-xs text-rose-500 mt-1"/></div>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div><label className="text-xs font-semibold">Teléfono *</label><Field name="telefono" placeholder="+506 8888 8888" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="telefono" component="div" className="text-xs text-rose-500 mt-1"/></div>
               <div><label className="text-xs font-semibold">Tipo *</label><Field as="select" name="tipo" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"><option value="casa">Casa</option><option value="apartamento">Apartamento</option><option value="condo">Condominio</option><option value="lote">Lote</option><option value="villa">Villa</option></Field></div>
             </div>
-            <div><label className="text-xs font-semibold">Dirección completa *</label><Field name="direccion" placeholder="Provincia, cantón, distrito, señas" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="direccion" component="div" className="text-xs text-rose-500 mt-1"/><div className="text-xs text-stone-400 mt-1 flex items-center gap-1"><MapPin className="w-3 h-3"/> Desplazamiento desde San Ramón</div></div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div><label className="text-xs font-semibold">Superficie (m²) *</label><Field name="superficie" placeholder="Ej. 250" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="superficie" component="div" className="text-xs text-rose-500 mt-1"/></div>
-              <div><label className="text-xs font-semibold flex items-center gap-1"><Clock className="w-3 h-3"/> Urgencia</label><Field as="select" name="urgencia" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"><option value="normal">Normal (72h)</option><option value="express">Express 24h (+30%)</option></Field></div>
+            <div><label className="text-xs font-semibold">Dirección *</label><Field name="direccion" placeholder="Cantón, distrito, señas" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="direccion" component="div" className="text-xs text-rose-500 mt-1"/><div className="text-xs text-stone-400 mt-1 flex items-center gap-1"><MapPin className="w-3 h-3"/> Desde San Ramón</div></div>
+
+            {/* Datos registrales y constructivos */}
+            <div className="border border-amber-200 bg-amber-50 rounded-xl p-4">
+              <div className="font-semibold text-sm text-amber-900">Datos registrales y constructivos — para avalúo completo</div>
+              <p className="text-xs text-amber-800 mt-1">Carga el <b>plano archivo</b> <i>o</i> escribe <b>N° plano + folio real</b>. Si tiene construcción, completa áreas/materiales.</p>
+              <div className="grid md:grid-cols-2 gap-3 mt-3">
+                <div><label className="text-xs font-semibold">N° Plano catastrado</label><Field name="numeroPlano" placeholder="A-123456-2024" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/><div className="text-xs text-stone-500">o sube archivo abajo</div></div>
+                <div><label className="text-xs font-semibold">Folio real / Matrícula</label><Field name="folioReal" placeholder="1-123456-000" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/><div className="text-xs text-stone-500">o sube literal</div></div>
+                <div><label className="text-xs font-semibold">Área terreno (m²)</label><Field name="areaTerreno" placeholder="Ej. 320" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/></div>
+                <div>
+                  <label className="text-xs font-semibold">¿Tiene construcción?</label>
+                  <div className="flex gap-2 mt-1"><label className="flex items-center gap-1 text-sm"><Field type="checkbox" name="tieneConstruccion" checked={values.tieneConstruccion} onChange={(e:any)=> setFieldValue('tieneConstruccion', e.target.checked)} /> Sí</label></div>
+                </div>
+                {values.tieneConstruccion && (
+                  <>
+                    <div><label className="text-xs font-semibold">Área construcción (m²)</label><Field name="areaConstruccion" placeholder="Ej. 180" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/></div>
+                    <div><label className="text-xs font-semibold">Año construcción</label><Field name="anioConstruccion" placeholder="2018" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/></div>
+                    <div><label className="text-xs font-semibold">Materiales/acabados</label><Field name="materiales" placeholder="Block, teja, porcelanato..." className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/></div>
+                    <div><label className="text-xs font-semibold">Uso suelo</label><Field as="select" name="usoSuelo" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"><option>Residencial</option><option>Comercial</option><option>Mixto</option><option>Agrícola</option></Field></div>
+                  </>
+                )}
+              </div>
+              <div className="grid md:grid-cols-2 gap-4 mt-3">
+                <div><label className="text-xs font-semibold">Superficie referencia (m²) *</label><Field name="superficie" placeholder="Total" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"/><ErrorMessage name="superficie" component="div" className="text-xs text-rose-500 mt-1"/></div>
+                <div><label className="text-xs font-semibold flex items-center gap-1"><Clock className="w-3 h-3"/> Urgencia</label><Field as="select" name="urgencia" className="w-full mt-1 px-3 py-2 border border-stone-200 rounded-xl bg-white text-sm"><option value="normal">Normal (72h)</option><option value="express">Express 24h (+30%)</option></Field></div>
+              </div>
             </div>
 
-            {/* CHECKLIST DOCUMENTAL */}
             <div className="border border-stone-200 rounded-xl p-4 bg-stone-50">
-              <div className="font-semibold text-sm text-stone-900 flex items-center gap-2"><Upload className="w-4 h-4"/> Checklist — fotos/datos del cliente</div>
-              <p className="text-xs text-stone-500 mt-1">
-                {isPaid ? <><b>Con visita (San Ramón):</b> obligatorios fotos, plano, literal y cédula. Sin ellos no se agenda visita (evitas ir sin datos).</> : <><b>Gratis porque envías fotos/datos:</b> sin moverte es gratis. Solo necesitas <b>fotos/video + plano + literal + cédula</b> para rango estimado. Sin desplazamiento.</>}
-              </p>
+              <div className="font-semibold text-sm flex items-center gap-2"><Upload className="w-4 h-4"/> Archivos — plano o números bastan</div>
               <div className="grid md:grid-cols-2 gap-3 mt-3">
                 {DOCS_REQUERIDOS.map(d=>{
-                  const isReq = isPaid ? d.required : d.key==='fotos' || d.key==='plano' || d.key==='literal' || d.key==='cedula'
+                  const done = !!files[d.key] || (d.key==='plano' && !!values.numeroPlano) || (d.key==='literal' && !!values.folioReal)
                   return (
-                  <label key={d.key} className={`flex flex-col gap-1 p-3 rounded-xl border bg-white ${isReq ? 'border-amber-300' : 'border-stone-200'}`}>
-                    <span className="text-xs font-semibold flex items-center gap-1">{d.label} {isReq && <span className="text-rose-600">*</span>} {files[d.key] && <span className="text-emerald-600">✓ {files[d.key]}</span>}</span>
-                    <input type="file" accept={d.accept} onChange={e=> onFile(d.key, e)} className="text-xs file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:bg-[#1a120e] file:text-white file:text-xs"/>
+                  <label key={d.key} className={`flex flex-col gap-1 p-3 rounded-xl border bg-white ${done?'border-emerald-200':'border-stone-200'}`}>
+                    <span className="text-xs font-semibold">{d.label} {done ? <span className="text-emerald-600">✓</span> : <span className="text-stone-400">○</span>} {files[d.key] && <span className="text-emerald-600 text-xs"> {files[d.key]}</span>}</span>
+                    <input type="file" accept={d.accept} onChange={e=> onFile(d.key, e)} className="text-xs file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:bg-[#1a120e] file:text-white"/>
+                    <span className="text-xs text-stone-400">{(d as any).note || ''}</span>
                   </label>
                 )})}
               </div>
-              {isPaid && missingRequired.length>0 && <div className="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2">Faltan para poder agendar visita: {missingRequired.join(', ')}.</div>}
-              {!isPaid && missingRequired.length>0 && <div className="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2">Para que sea GRATIS y preciso, adjunta: {missingRequired.join(', ')}.</div>}
-              {!isPaid && missingRequired.length===0 && <div className="mt-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-2">¡Perfecto! Con tus fotos/datos el avalúo virtual es GRATIS sin movilización.</div>}
+              {missing.length>0 && <div className="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2">Falta para avalúo completo: {missing.join(', ')}. Con plano archivo <i>o</i> N°+folio + fotos es suficiente para virtual gratis.</div>}
+              {missing.length===0 && <div className="mt-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-2">¡Docs OK para avalúo completo!</div>}
             </div>
 
             <div className="bg-stone-900 text-white rounded-xl p-4">
@@ -146,9 +162,7 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
               </div>
             </div>
 
-            {isPaid && <label className="flex gap-2 items-start text-xs text-stone-600 bg-amber-50 border border-amber-200 rounded-xl p-3"><Field type="checkbox" required className="mt-0.5"/><span>Entiendo costo <b>₡{costoPreview.toLocaleString('es-CR')}</b> y que faltando docs obligatorios no se agenda visita.</span></label>}
-
-            <div><label className="text-xs font-semibold">Descripción *</label><Field as="textarea" name="descripcion" rows={3} placeholder="Habitaciones, estado, acabados..." className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="descripcion" component="div" className="text-xs text-rose-500 mt-1"/></div>
+            <div><label className="text-xs font-semibold">Descripción *</label><Field as="textarea" name="descripcion" rows={3} placeholder="Detalles: habitaciones, estado, acabados..." className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="descripcion" component="div" className="text-xs text-rose-500 mt-1"/></div>
             <button type="submit" disabled={isSubmitting} className="w-full py-3 rounded-xl bg-gradient-to-r from-[#8c6239] to-[#4a3320] text-white font-semibold flex items-center justify-center gap-2 disabled:opacity-60">
               {isSubmitting && <Loader2 className="w-4 h-4 animate-spin"/>}{isSubmitting? 'Registrando...' : costoPreview===0 ? 'Solicitar estimación gratis' : `Solicitar avalúo — ₡${costoPreview.toLocaleString('es-CR')}`}
             </button>

@@ -24,8 +24,8 @@ export default async function handler(req, res) {
         const b = req.body;
         const id = `AV-${Date.now().toString().slice(-6)}`;
         await sql`
-          INSERT INTO avaluos (id, nombre, email, telefono, direccion, superficie, tipo, descripcion, modalidad, urgencia, status, pago_status, costo_total, desplazamiento_costo, metodologia, doc_completitud)
-          VALUES (${id}, ${b.nombre}, ${b.email}, ${b.telefono}, ${b.direccion}, ${b.superficie}, ${b.tipo}, ${b.descripcion}, ${b.modalidad}, ${b.urgencia}, ${b.status||'pendiente_pago'}, ${b.pagoStatus||'pendiente'}, ${b.costoTotal||0}, ${b.desplazamientoCosto||0}, ${b.metodologia||''}, ${b.docCompletitud||0})
+          INSERT INTO avaluos (id, nombre, email, telefono, direccion, superficie, tipo, descripcion, modalidad, urgencia, status, pago_status, costo_total, desplazamiento_costo, metodologia, doc_completitud, numero_plano, folio_real, area_terreno, area_construccion, anio_construccion, materiales, uso_suelo, tiene_construccion)
+          VALUES (${id}, ${b.nombre}, ${b.email}, ${b.telefono}, ${b.direccion}, ${b.superficie}, ${b.tipo}, ${b.descripcion}, ${b.modalidad}, ${b.urgencia}, ${b.status||'pendiente_pago'}, ${b.pagoStatus||'pendiente'}, ${b.costoTotal||0}, ${b.desplazamientoCosto||0}, ${b.metodologia||''}, ${b.docCompletitud||0}, ${b.numeroPlano||''}, ${b.folioReal||''}, ${b.areaTerreno||0}, ${b.areaConstruccion||0}, ${b.anioConstruccion||null}, ${b.materiales||''}, ${b.usoSuelo||''}, ${b.tieneConstruccion??true})
         `;
         return res.status(201).json({ id });
       }
