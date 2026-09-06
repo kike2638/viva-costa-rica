@@ -165,9 +165,9 @@ export const PERITO_PRINCIPAL = {
 // === TERRA CAPITAL: Modelo comercial de avalúos ===
 export type AvaluoModalidad = 'virtual' | 'presencial' | 'hipotecario'
 export const AVALUO_MODALIDADES: { value: AvaluoModalidad; label: string; desc: string; basePrice: number; badge: string }[] = [
-  { value: 'virtual', label: 'Estimación Virtual', desc: 'Rango estimado sin visita. No válido para bancos. Entrega 24h.', basePrice: 0, badge: 'GRATIS' },
-  { value: 'presencial', label: 'Avalúo Presencial Certificado', desc: 'Visita + reporte CFIA válido para venta. Entrega 48-72h.', basePrice: 45000, badge: 'Desde ₡45.000' },
-  { value: 'hipotecario', label: 'Avalúo Hipotecario Bancario', desc: 'Certificado para crédito, con inspección y fotos. Entrega 72h.', basePrice: 95000, badge: 'Desde ₡95.000' },
+  { value: 'virtual', label: 'Estimación Virtual — Cliente envía fotos/datos', desc: 'GRATIS sin visita: cliente envía fotos, video y datos. Rango estimado 24h. No válido SUGEF/bancos. Sin desplazamiento.', basePrice: 0, badge: 'GRATIS' },
+  { value: 'presencial', label: 'Avalúo Presencial Certificado — Con visita', desc: 'CON visita: me desplazo desde San Ramón + reporte CFIA válido venta. Entrega 48-72h. Incluye desplazamiento.', basePrice: 45000, badge: 'Desde ₡45.000' },
+  { value: 'hipotecario', label: 'Avalúo Hipotecario Bancario — Con visita', desc: 'CON visita: inspección + fotos perito + certificado crédito. 72h. Incluye desplazamiento.', basePrice: 95000, badge: 'Desde ₡95.000' },
 ]
 
 // Base: San Ramón de Alajuela — todo se calcula desde aquí
@@ -195,6 +195,7 @@ export const calcularCostoAvaluo = (modalidad: AvaluoModalidad, direccion: strin
 
 // === CHECKLIST + METODOLOGÍA AUTO (20 años) ===
 export const DOCS_REQUERIDOS = [
+  { key:'fotos', label:'Fotos y video del inmueble (cliente)', required: true, accept: '.jpg,.png,.mp4,.heic' },
   { key:'plano', label:'Plano catastrado vigente', required: true, accept: '.pdf,.jpg,.png' },
   { key:'literal', label:'Certificación literal Registro (<30d)', required: true, accept: '.pdf,.jpg,.png' },
   { key:'cedula', label:'Cédula / personería', required: true, accept: '.pdf,.jpg,.png' },

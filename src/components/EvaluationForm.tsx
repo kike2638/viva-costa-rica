@@ -39,7 +39,7 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
           <div className="font-semibold text-stone-900 mt-3">¡Solicitud registrada!</div>
           <div className="mt-2 inline-flex px-3 py-1 rounded-full bg-stone-900 text-white text-xs font-mono">ID: {newId}</div>
           {lastModalidad==='virtual' ? (
-            <p className="text-sm text-stone-600 mt-3">Modalidad <b>Virtual — GRATIS</b>. Rango estimado 24h (no válido SUGEF).</p>
+            <p className="text-sm text-stone-600 mt-3">Modalidad <b>Virtual — GRATIS porque enviaste fotos/datos</b>. Sin desplazamiento desde San Ramón. Rango 24h (no válido SUGEF).</p>
           ) : (
             <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl p-3 text-left text-sm">
               <div className="font-semibold text-amber-900">Avalúo {lastModalidad==='hipotecario'?'Hipotecario':'Presencial'} — <span className="text-[#8c6239]">₡{lastCosto.toLocaleString('es-CR')}</span></div>
@@ -116,18 +116,23 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
 
             {/* CHECKLIST DOCUMENTAL */}
             <div className="border border-stone-200 rounded-xl p-4 bg-stone-50">
-              <div className="font-semibold text-sm text-stone-900 flex items-center gap-2"><Upload className="w-4 h-4"/> Checklist documental — exigido CFIA/IVS (20 años)</div>
-              <p className="text-xs text-stone-500 mt-1">Para presencial/hipotecario son <b>obligatorios</b> plano, literal y cédula. Sin ellos el avalúo se rechaza en banco/juzgado. Virtual puede ir sin docs pero baja completitud.</p>
+              <div className="font-semibold text-sm text-stone-900 flex items-center gap-2"><Upload className="w-4 h-4"/> Checklist — fotos/datos del cliente</div>
+              <p className="text-xs text-stone-500 mt-1">
+                {isPaid ? <><b>Con visita (San Ramón):</b> obligatorios fotos, plano, literal y cédula. Sin ellos no se agenda visita (evitas ir sin datos).</> : <><b>Gratis porque envías fotos/datos:</b> sin moverte es gratis. Solo necesitas <b>fotos/video + plano + literal + cédula</b> para rango estimado. Sin desplazamiento.</>}
+              </p>
               <div className="grid md:grid-cols-2 gap-3 mt-3">
-                {DOCS_REQUERIDOS.map(d=>(
-                  <label key={d.key} className={`flex flex-col gap-1 p-3 rounded-xl border bg-white ${d.required && isPaid ? 'border-amber-300' : 'border-stone-200'}`}>
-                    <span className="text-xs font-semibold flex items-center gap-1">{d.label} {d.required && isPaid && <span className="text-rose-600">*</span>} {files[d.key] && <span className="text-emerald-600">✓ {files[d.key]}</span>}</span>
+                {DOCS_REQUERIDOS.map(d=>{
+                  const isReq = isPaid ? d.required : d.key==='fotos' || d.key==='plano' || d.key==='literal' || d.key==='cedula'
+                  return (
+                  <label key={d.key} className={`flex flex-col gap-1 p-3 rounded-xl border bg-white ${isReq ? 'border-amber-300' : 'border-stone-200'}`}>
+                    <span className="text-xs font-semibold flex items-center gap-1">{d.label} {isReq && <span className="text-rose-600">*</span>} {files[d.key] && <span className="text-emerald-600">✓ {files[d.key]}</span>}</span>
                     <input type="file" accept={d.accept} onChange={e=> onFile(d.key, e)} className="text-xs file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:bg-[#1a120e] file:text-white file:text-xs"/>
                   </label>
-                ))}
+                )})}
               </div>
-              {isPaid && missingRequired.length>0 && <div className="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2">Faltan obligatorios: {missingRequired.join(', ')} — podrás completar luego, pero la visita no se agenda hasta 100% requeridos.</div>}
-              {!isPaid && <div className="mt-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-2">Virtual: docs opcionales, pero si los adjuntas mejora la estimación.</div>}
+              {isPaid && missingRequired.length>0 && <div className="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2">Faltan para poder agendar visita: {missingRequired.join(', ')}.</div>}
+              {!isPaid && missingRequired.length>0 && <div className="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-2">Para que sea GRATIS y preciso, adjunta: {missingRequired.join(', ')}.</div>}
+              {!isPaid && missingRequired.length===0 && <div className="mt-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-2">¡Perfecto! Con tus fotos/datos el avalúo virtual es GRATIS sin movilización.</div>}
             </div>
 
             <div className="bg-stone-900 text-white rounded-xl p-4">
