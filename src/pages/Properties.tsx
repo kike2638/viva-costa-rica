@@ -56,14 +56,14 @@ function PropertyDetail({ id }: { id: string }){
             <img src={p.images[0]} alt={p.title} className="w-full h-[420px] object-cover"/>
           </div>
           <div className="grid grid-cols-3 gap-3 mt-3">
-            {p.images.slice(1).map((img,i)=> <img key={i} src={img} alt="" className="h-28 w-full object-cover rounded-xl border border-slate-200"/>)}
+            {p.images.slice(1).map((img:any,i:number)=> <img key={i} src={img} alt="" className="h-28 w-full object-cover rounded-xl border border-slate-200"/>)}
           </div>
           <div className="mt-6">
             <h1 className="text-2xl font-extrabold text-slate-900">{p.title}</h1>
             <div className="flex items-center gap-2 text-sm text-slate-500 mt-1"><MapPin className="w-4 h-4"/> {p.location} · <Calendar className="w-4 h-4"/> {p.year}</div>
             <p className="text-sm text-slate-600 leading-relaxed mt-4">{p.description} Área total {p.area} m² con acabados premium, iluminación natural y distribución funcional. Ideal para familia o inversión.</p>
             <div className="flex flex-wrap gap-2 mt-4">
-              {p.amenities.map(a=> <span key={a} className="px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-xs font-medium text-slate-700">{a}</span>)}
+              {p.amenities.map((a:any)=> <span key={a} className="px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-full text-xs font-medium text-slate-700">{a}</span>)}
             </div>
           </div>
         </div>

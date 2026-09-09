@@ -4,10 +4,11 @@ import { ArrowRight, ShieldCheck, Search, BadgeCheck, TrendingUp } from 'lucide-
 import PropertyCard from '../components/PropertyCard'
 import EvaluationForm from '../components/EvaluationForm'
 import Testimonials from '../components/Testimonials'
-import { PROPERTIES } from '../utils/constants'
+import { usePropiedadStore } from '../store/propiedades'
 
 export default function Home(){
-  const featured = PROPERTIES.filter(p=>p.featured)
+  const { propiedades } = usePropiedadStore()
+  const featured = propiedades.filter(p=>p.destacada).map(p=> ({ id:p.id, title:p.titulo, location:p.ubicacion, city:p.ciudad, price:p.precioVenta, priceLabel:`₡${p.precioVenta.toLocaleString('es-CR')}`, type:p.tipo as any, status:'venta' as const, bedrooms:p.habitaciones, bathrooms:p.banos, area:p.area, year:2024, image:p.imagenUrl, images:[p.imagenUrl], featured:p.destacada, description:p.descripcion, amenities:[], lat:10.09, lng:-84.47 } as any))
   return (
     <div>
       {/* HERO */}

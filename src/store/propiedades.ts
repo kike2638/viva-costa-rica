@@ -17,6 +17,8 @@ export interface AdminPropiedad {
   area: number
   descripcion: string
   imagenUrl: string
+  imagenes: string[] // galería (placehold ficticias, borrables)
+  videos: string[] // URLs blob o youtube
   destacada: boolean
   disponible: boolean
   createdAt: string
@@ -26,7 +28,7 @@ const mapSeed = (): AdminPropiedad[] => SEED.map(p=> ({
   id: p.id, titulo: p.title, ubicacion: p.location, ciudad: p.city, tipo: p.type,
   operacion: 'venta' as Operacion, precioVenta: p.price, valorAvaluo: p.price,
   habitaciones: p.bedrooms, banos: p.bathrooms, area: p.area, descripcion: p.description,
-  imagenUrl: p.image, destacada: !!p.featured, disponible: true, createdAt: new Date().toISOString()
+  imagenUrl: p.image, imagenes: p.images?.length ? p.images : [p.image], videos: [], destacada: !!p.featured, disponible: true, createdAt: new Date().toISOString()
 }))
 
 type State = {
@@ -46,7 +48,7 @@ export const usePropiedadStore = create<State>()(persist((set,get)=> ({
   },
   updatePropiedad: (id, patch) => set({ propiedades: get().propiedades.map(x=> x.id===id ? {...x,...patch}: x)}),
   deletePropiedad: (id) => set({ propiedades: get().propiedades.filter(x=> x.id!==id)}),
-}), { name: 'terra-propiedades-v1' }))
+}), { name: 'terra-propiedades-v2-galeria' }))
 
 export const getDesfase = (p: AdminPropiedad) => {
   if(!p.valorAvaluo) return null
