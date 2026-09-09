@@ -1,4 +1,4 @@
-import { Mountain, Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react'
+import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function Footer() {
@@ -8,8 +8,8 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-[#8c6239] flex items-center justify-center text-white"><Mountain className="w-5 h-5"/></div>
-              <div><div className="font-extrabold tracking-tight">TERRA CAPITAL</div><div className="text-xs tracking-widest text-stone-400">SAN RAMÓN · AVALÚOS</div></div>
+              <img src="/logo-terra-blanco.svg" alt="Terra Capital" className="h-12 w-auto bg-white/5 rounded-xl p-1" />
+              <div><div className="font-extrabold tracking-tight">TERRA CAPITAL</div><div className="text-xs tracking-widest text-stone-400">TU HOGAR EMPIEZA AQUÍ</div></div>
             </div>
             <p className="text-sm text-stone-400 leading-relaxed">Base San Ramón de Alajuela. Avalúos certificados en Occidente y todo Costa Rica. Más de 15 años respaldando tu patrimonio.</p>
             <div className="flex gap-2 mt-4">
