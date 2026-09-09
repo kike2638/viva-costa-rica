@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+﻿import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 type User = { email: string; name: string; role: 'superadmin' }
@@ -11,7 +11,7 @@ type State = {
 }
 
 // credenciales demo SuperAdmin
-const SUPER = { email:'admin@terracapital.cr', pass:'Terra2026', name:'SuperAdmin Terra' }
+const SUPER = { email:'admin@vivacostarica.com', pass:'Terra2026', name:'SuperAdmin Terra' }
 
 export const useAuthStore = create<State>()(persist((set)=> ({
   user: null,
@@ -25,3 +25,4 @@ export const useAuthStore = create<State>()(persist((set)=> ({
   },
   logout: () => set({ user:null, isAuthenticated:false }),
 }), { name:'terra-auth' }))
+

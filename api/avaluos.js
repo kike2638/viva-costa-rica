@@ -1,6 +1,7 @@
-// Vercel Serverless Function — Terra Capital (San Ramón)
-// Requiere Vercel Postgres (POSTGRES_URL) y env var creada en dashboard
-// Fallback a memoria si no hay DB (para deploy inicial sin Postgres)
+// Vercel Serverless Function — Viva Costa Rica (vivacostarica.com)
+// Requiere Vercel Postgres (POSTGRES_URL) + Vercel Blob (BLOB_READ_WRITE_TOKEN)
+// Docs: https://vercel.com/docs/storage/vercel-postgres + /vercel-blob
+// Tablas: sql/schema.sql (avaluos, propiedades)
 
 let mem = []; // fallback
 
@@ -24,10 +25,23 @@ export default async function handler(req, res) {
         const b = req.body;
         const id = `AV-${Date.now().toString().slice(-6)}`;
         await sql`
-          INSERT INTO avaluos (id, nombre, email, telefono, direccion, superficie, tipo, descripcion, modalidad, urgencia, status, pago_status, costo_total, desplazamiento_costo, metodologia, doc_completitud, numero_plano, folio_real, area_terreno, area_construccion, anio_construccion, materiales, uso_suelo, tiene_construccion)
-          VALUES (${id}, ${b.nombre}, ${b.email}, ${b.telefono}, ${b.direccion}, ${b.superficie}, ${b.tipo}, ${b.descripcion}, ${b.modalidad}, ${b.urgencia}, ${b.status||'pendiente_pago'}, ${b.pagoStatus||'pendiente'}, ${b.costoTotal||0}, ${b.desplazamientoCosto||0}, ${b.metodologia||''}, ${b.docCompletitud||0}, ${b.numeroPlano||''}, ${b.folioReal||''}, ${b.areaTerreno||0}, ${b.areaConstruccion||0}, ${b.anioConstruccion||null}, ${b.materiales||''}, ${b.usoSuelo||''}, ${b.tieneConstruccion??true})
+          INSERT INTO avaluos (id, nombre, email, telefono, direccion, superficie, tipo, descripcion, modalidad, urgencia, status, pago_status, costo_total, desplazamiento_costo, metodologia, doc_completitud, documentos, numero_plano, folio_real, area_terreno, area_construccion, anio_construccion, materiales, uso_suelo, tiene_construccion)
+          VALUES (${id}, ${b.nombre}, ${b.email}, ${b.telefono}, ${b.direccion}, ${b.superficie}, ${b.tipo}, ${b.descripcion}, ${b.modalidad}, ${b.urgencia}, ${b.status||'pendiente_pago'}, ${b.pagoStatus||'pendiente'}, ${b.costoTotal||0}, ${b.desplazamientoCosto||0}, ${b.metodologia||''}, ${b.docCompletitud||0}, ${JSON.stringify(b.documentos||{})}, ${b.numeroPlano||''}, ${b.folioReal||''}, ${b.areaTerreno||0}, ${b.areaConstruccion||0}, ${b.anioConstruccion||null}, ${b.materiales||''}, ${b.usoSuelo||''}, ${b.tieneConstruccion??true})
         `;
         return res.status(201).json({ id });
+      }
+      if (req.method === 'PUT') {
+        const b = req.body; const id = b.id || req.query.id;
+        if (!id) return res.status(400).json({ error: 'id required' });
+        // update dinámico: solo campos enviados
+        await sql`UPDATE avaluos SET status = COALESCE(${b.status}, status), pago_status = COALESCE(${b.pagoStatus}, pago_status), valor_estimado = COALESCE(${b.valorEstimado}, valor_estimado), tasador = COALESCE(${b.tasador}, tasador), fecha_visita = COALESCE(${b.fechaVisita}, fecha_visita), notas = COALESCE(${b.notas}, notas), documentos = COALESCE(${b.documentos ? JSON.stringify(b.documentos) : null}::jsonb, documentos), costo_total = COALESCE(${b.costoTotal}, costo_total) WHERE id = ${id}`;
+        return res.status(200).json({ ok: true });
+      }
+      if (req.method === 'DELETE') {
+        const id = req.query.id || req.body?.id;
+        if (!id) return res.status(400).json({ error: 'id required' });
+        await sql`DELETE FROM avaluos WHERE id = ${id}`;
+        return res.status(200).json({ ok: true });
       }
       return res.status(405).json({ error: 'Method not allowed' });
     } else {

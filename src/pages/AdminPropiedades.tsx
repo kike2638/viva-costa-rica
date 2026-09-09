@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import AdminLayout from '../components/AdminLayout'
 import { usePropiedadStore, type AdminPropiedad, getDesfase } from '../store/propiedades'
 import { Plus, Trash2, Edit2, Home, MapPin, DollarSign } from 'lucide-react'
@@ -7,7 +7,7 @@ export default function AdminPropiedades(){
   const { propiedades, addPropiedad, updatePropiedad, deletePropiedad } = usePropiedadStore()
   const [editing, setEditing] = useState<AdminPropiedad | null>(null)
   const [form, setForm] = useState<Partial<AdminPropiedad>>({
-    titulo:'', ubicacion:'San Ramón, Alajuela', ciudad:'San Ramón', tipo:'casa', operacion:'venta',
+    titulo:'', ubicacion:'Costa Rica', ciudad:'Costa Rica', tipo:'casa', operacion:'venta',
     precioVenta: 0, valorAvaluo: 0, habitaciones: 3, banos: 2, area: 120, descripcion:'', imagenUrl:'https://placehold.co/800x600/8c6239/fff?text=Nueva', imagenes: [], videos: [], destacada:false, disponible:true
   })
 
@@ -45,7 +45,7 @@ export default function AdminPropiedades(){
     } else {
       addPropiedad(payload)
     }
-    setForm({ titulo:'', ubicacion:'San Ramón, Alajuela', ciudad:'San Ramón', tipo:'casa', operacion:'venta', precioVenta: 0, valorAvaluo: 0, habitaciones: 3, banos: 2, area: 120, descripcion:'', imagenUrl:'https://placehold.co/800x600/8c6239/fff?text=Nueva', imagenes:[], videos:[], destacada:false, disponible:true })
+    setForm({ titulo:'', ubicacion:'Costa Rica', ciudad:'Costa Rica', tipo:'casa', operacion:'venta', precioVenta: 0, valorAvaluo: 0, habitaciones: 3, banos: 2, area: 120, descripcion:'', imagenUrl:'https://placehold.co/800x600/8c6239/fff?text=Nueva', imagenes:[], videos:[], destacada:false, disponible:true })
   }
 
   const startEdit = (p: AdminPropiedad)=> { setEditing(p); setForm({...p}); window.scrollTo({top:0, behavior:'smooth'}) }
@@ -107,7 +107,7 @@ export default function AdminPropiedades(){
         </div>
         <div className="flex gap-2 mt-4">
           <button onClick={submit} className="px-6 py-2.5 rounded-xl bg-[#1a120e] text-white font-semibold hover:bg-black">{editing?'Guardar cambios':'Agregar propiedad'}</button>
-          {editing && <button onClick={()=> {setEditing(null); setForm({ titulo:'', ubicacion:'San Ramón, Alajuela', ciudad:'San Ramón', tipo:'casa', operacion:'venta', precioVenta: 0, valorAvaluo: 0, habitaciones: 3, banos: 2, area: 120, descripcion:'', imagenUrl:'https://placehold.co/800x600/8c6239/fff?text=Nueva', imagenes:[], videos:[], destacada:false, disponible:true })}} className="px-4 py-2.5 rounded-xl border border-stone-200">Cancelar</button>}
+          {editing && <button onClick={()=> {setEditing(null); setForm({ titulo:'', ubicacion:'Costa Rica', ciudad:'Costa Rica', tipo:'casa', operacion:'venta', precioVenta: 0, valorAvaluo: 0, habitaciones: 3, banos: 2, area: 120, descripcion:'', imagenUrl:'https://placehold.co/800x600/8c6239/fff?text=Nueva', imagenes:[], videos:[], destacada:false, disponible:true })}} className="px-4 py-2.5 rounded-xl border border-stone-200">Cancelar</button>}
         </div>
       </div>
 
@@ -140,3 +140,4 @@ export default function AdminPropiedades(){
     </AdminLayout>
   )
 }
+

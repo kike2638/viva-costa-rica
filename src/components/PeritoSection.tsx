@@ -1,4 +1,4 @@
-import { Award, FileCheck, Scale, ClipboardCheck, MapPin, Clock, Shield } from 'lucide-react'
+﻿import { Award, FileCheck, Scale, ClipboardCheck, MapPin, Clock, Shield } from 'lucide-react'
 import { PERITO_PRINCIPAL } from '../utils/constants'
 
 export default function PeritoSection(){
@@ -22,7 +22,7 @@ export default function PeritoSection(){
           <div className="mt-4 flex flex-wrap gap-2">
             {p.especialidades.map(e=> <span key={e} className="text-xs bg-white/10 border border-white/20 px-2.5 py-1 rounded-full">{e}</span>)}
           </div>
-          <div className="mt-6 flex items-center gap-2 text-xs text-stone-400"><MapPin className="w-4 h-4"/> Base San Ramón · cobertura nacional</div>
+          <div className="mt-6 flex items-center gap-2 text-xs text-stone-400"><MapPin className="w-4 h-4"/> Base Costa Rica · cobertura nacional</div>
         </div>
 
         <div className="lg:col-span-3 p-6 md:p-8 space-y-6">
@@ -64,3 +64,4 @@ export default function PeritoSection(){
     </section>
   )
 }
+

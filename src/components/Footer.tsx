@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react'
+﻿import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Youtube } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function Footer() {
@@ -8,10 +8,10 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img src="/logo-terra-blanco.svg" alt="Terra Capital" className="h-12 w-auto bg-white/5 rounded-xl p-1" />
-              <div><div className="font-extrabold tracking-tight">TERRA CAPITAL</div><div className="text-xs tracking-widest text-stone-400">TU HOGAR EMPIEZA AQUÍ</div></div>
+              <img src="/logo-viva-icon.svg" alt="Viva Costa Rica" className="h-12 w-auto bg-white/5 rounded-xl p-1" />
+              <div><div className="font-extrabold tracking-tight">Viva Costa Rica</div><div className="text-xs tracking-widest text-stone-400">Your Home in Paradise</div></div>
             </div>
-            <p className="text-sm text-stone-400 leading-relaxed">Base San Ramón de Alajuela. Avalúos certificados en Occidente y todo Costa Rica. Más de 15 años respaldando tu patrimonio.</p>
+            <p className="text-sm text-stone-400 leading-relaxed">Base Costa Rica de Alajuela. Avalúos certificados en Occidente y todo Costa Rica. Más de 15 años respaldando tu patrimonio.</p>
             <div className="flex gap-2 mt-4">
               {[Facebook, Instagram, Linkedin, Youtube].map((Icon,i)=> <a key={i} href="#" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#8c6239] transition"><Icon className="w-4 h-4"/></a>)}
             </div>
@@ -36,17 +36,18 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-white mb-4">Contacto</h4>
             <ul className="space-y-3 text-sm text-stone-400">
-              <li className="flex gap-2"><MapPin className="w-4 h-4 mt-0.5 text-[#d4a574]"/> San Ramón, Alajuela, Costa Rica<br/>100m norte del Parque Central — Oficina Terra Capital</li>
-              <li className="flex gap-2 items-center"><Phone className="w-4 h-4 text-[#d4a574]"/> +506 2222-3333 · San Ramón base</li>
-              <li className="flex gap-2 items-center"><Mail className="w-4 h-4 text-[#d4a574]"/> info@terracapital.cr</li>
+              <li className="flex gap-2"><MapPin className="w-4 h-4 mt-0.5 text-[#d4a574]"/> Costa Rica, Costa Rica<br/>100m norte del Parque Central — Oficina Viva Costa Rica</li>
+              <li className="flex gap-2 items-center"><Phone className="w-4 h-4 text-[#d4a574]"/> +506 2222-3333 · Costa Rica base</li>
+              <li className="flex gap-2 items-center"><Mail className="w-4 h-4 text-[#d4a574]"/> info@vivacostarica.com</li>
             </ul>
           </div>
         </div>
         <div className="border-t border-white/10 mt-10 pt-6 flex flex-col md:flex-row justify-between gap-2 text-xs text-stone-500">
-          <span>© {new Date().getFullYear()} Terra Capital. Todos los derechos reservados.</span>
+          <span>© {new Date().getFullYear()} Viva Costa Rica. Todos los derechos reservados.</span>
           <span className="flex gap-4"><a href="#" className="hover:text-white">Privacidad</a><a href="#" className="hover:text-white">Términos</a><a href="#" className="hover:text-white">Aviso legal</a></span>
         </div>
       </div>
     </footer>
   )
 }
+

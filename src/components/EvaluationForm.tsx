@@ -1,4 +1,4 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+﻿import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { useState, useMemo } from 'react'
 import { CheckCircle2, Loader2, MapPin, Clock, Upload, Award } from 'lucide-react'
@@ -24,35 +24,36 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
   const [newId, setNewId] = useState<string>('')
   const [lastCosto, setLastCosto] = useState<number>(0)
   const [lastModalidad, setLastModalidad] = useState<AvaluoModalidad>('virtual')
-  const [files, setFiles] = useState<Record<string,string>>({})
+  const [files, setFiles] = useState<Record<string,File>>({})
   const addAvaluo = useAvaluoStore(s=>s.addAvaluo)
-  const onFile = (key:string, e:any) => { const f=e.target.files?.[0]; if(f) setFiles(p=> ({...p, [key]: f.name})) }
+  const onFile = (key:string, e:any) => { const f=e.target.files?.[0]; if(f) setFiles(p=> ({...p, [key]: f})) }
 
   return (
     <div className={`bg-white border border-stone-200 rounded-2xl shadow-sm p-6 ${compact?'':''}`}>
-      <h3 className="font-bold text-stone-900 text-lg">Solicitar avalúo — Terra Capital</h3>
+      <h3 className="font-bold text-stone-900 text-lg">Solicitar avalúo — Viva Costa Rica</h3>
       <p className="text-sm text-stone-500 mb-4">Avalúo completo requiere plano <b>o</b> N° registro + datos de construcción</p>
       {ok ? (
         <div className="py-6 text-center">
           <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto"/>
           <div className="font-semibold text-stone-900 mt-3">¡Solicitud registrada!</div>
           <div className="mt-2 inline-flex px-3 py-1 rounded-full bg-stone-900 text-white text-xs font-mono">ID: {newId}</div>
-          {lastModalidad==='virtual' ? <p className="text-sm text-stone-600 mt-3">Virtual <b>GRATIS</b> (fotos/datos) — sin desplazamiento San Ramón.</p> : <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl p-3 text-left text-sm"><div className="font-semibold text-amber-900">Avalúo {lastModalidad==='hipotecario'?'Hipotecario':'Presencial'} — <span className="text-[#8c6239]">₡{lastCosto.toLocaleString('es-CR')}</span></div><p className="text-xs text-amber-800 mt-1">Pendiente de pago. Tras pago asignamos perito 20 años y agendamos visita.</p></div>}
+          {lastModalidad==='virtual' ? <p className="text-sm text-stone-600 mt-3">Virtual <b>GRATIS</b> (fotos/datos) — sin desplazamiento Costa Rica.</p> : <div className="mt-3 bg-amber-50 border border-amber-200 rounded-xl p-3 text-left text-sm"><div className="font-semibold text-amber-900">Avalúo {lastModalidad==='hipotecario'?'Hipotecario':'Presencial'} — <span className="text-[#8c6239]">₡{lastCosto.toLocaleString('es-CR')}</span></div><p className="text-xs text-amber-800 mt-1">Pendiente de pago. Tras pago asignamos perito 20 años y agendamos visita.</p></div>}
           <button onClick={()=> {setOk(false); setFiles({})}} className="mt-4 text-[#8c6239] text-sm font-semibold">Enviar otra</button>
         </div>
       ) : (
-      <Formik initialValues={{nombre:'', email:'', telefono:'', direccion:'', superficie:'', tipo:'casa', modalidad:'virtual' as AvaluoModalidad, descripcion:'', urgencia:'normal', numeroPlano:'', folioReal:'', areaTerreno:'', areaConstruccion:'', anioConstruccion:'', materiales:'', usoSuelo:'Residencial', tieneConstruccion:true}} validationSchema={schema} onSubmit={(values, {setSubmitting, resetForm})=>{
+      <Formik initialValues={{nombre:'', email:'', telefono:'', direccion:'', superficie:'', tipo:'casa', modalidad:'virtual' as AvaluoModalidad, descripcion:'', urgencia:'normal', numeroPlano:'', folioReal:'', areaTerreno:'', areaConstruccion:'', anioConstruccion:'', materiales:'', usoSuelo:'Residencial', tieneConstruccion:true}} validationSchema={schema} onSubmit={async (values, {setSubmitting, resetForm})=>{
         const costo = calcularCostoAvaluo(values.modalidad as AvaluoModalidad, values.direccion, values.urgencia as any)
         const despl = values.modalidad==='virtual' ? 0 : getDesplazamientoCosto(values.direccion)
         const metodologia = getMetodologiaRecomendada(values.tipo, values.modalidad as AvaluoModalidad)
         const reqKeys = DOCS_REQUERIDOS.filter(d=>d.required).map(d=>d.key)
-        // para avalúo completo: plano archivo O numeroPlano+folioReal cuenta como cumplido para 'plano'/'literal'
         const hasPlano = !!files['plano'] || !!values.numeroPlano
         const hasLiteral = !!files['literal'] || !!values.folioReal
         const docOk = (k:string)=> { if(k==='plano') return hasPlano; if(k==='literal') return hasLiteral; return !!files[k] }
         const completitud = reqKeys.length ? Math.round((reqKeys.filter(k=> docOk(k)).length / reqKeys.length)*100) : 100
-        setTimeout(()=>{
-          const id = addAvaluo({
+        // Vercel Blob: pasamos Files reales en _files, el store los sube a /api/upload
+        const docNames: Record<string,string> = {}
+        Object.entries(files).forEach(([k,f])=> docNames[k]= (f as File).name)
+        const id = await addAvaluo({
             nombre: values.nombre, email: values.email, telefono: values.telefono,
             direccion: values.direccion, superficie: Number(values.superficie), tipo: values.tipo,
             descripcion: values.descripcion, modalidad: values.modalidad, urgencia: values.urgencia as any,
@@ -61,10 +62,10 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
             areaConstruccion: values.areaConstruccion ? Number(values.areaConstruccion) : 0,
             anioConstruccion: values.anioConstruccion ? Number(values.anioConstruccion) : undefined,
             materiales: values.materiales, usoSuelo: values.usoSuelo, tieneConstruccion: values.tieneConstruccion,
-            costoTotal: costo, desplazamientoCosto: despl, metodologia, documentos: {...files, ...(values.numeroPlano?{numeroPlano: values.numeroPlano}:{}), ...(values.folioReal?{folioReal: values.folioReal}:{})}, docCompletitud: completitud, metodoPago: '' as any
-          })
-          setNewId(id); setLastCosto(costo); setLastModalidad(values.modalidad); setSubmitting(false); setOk(true); resetForm(); setFiles({});
-        }, 700)
+            costoTotal: costo, desplazamientoCosto: despl, metodologia, documentos: {...docNames, ...(values.numeroPlano?{numeroPlano: values.numeroPlano}:{}), ...(values.folioReal?{folioReal: values.folioReal}:{})}, docCompletitud: completitud, metodoPago: '' as any,
+            _files: files
+          } as any)
+        setNewId(id); setLastCosto(costo); setLastModalidad(values.modalidad); setSubmitting(false); setOk(true); resetForm(); setFiles({});
       }}>
         {({isSubmitting, values})=>{
           const costoPreview = useMemo(()=> calcularCostoAvaluo(values.modalidad as AvaluoModalidad, values.direccion || '', values.urgencia as any), [values.modalidad, values.direccion, values.urgencia])
@@ -105,7 +106,7 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
               <div><label className="text-xs font-semibold">Teléfono *</label><Field name="telefono" placeholder="+506 8888 8888" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="telefono" component="div" className="text-xs text-rose-500 mt-1"/></div>
               <div><label className="text-xs font-semibold">Tipo *</label><Field as="select" name="tipo" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"><option value="casa">Casa</option><option value="apartamento">Apartamento</option><option value="condo">Condominio</option><option value="lote">Lote</option><option value="villa">Villa</option></Field></div>
             </div>
-            <div><label className="text-xs font-semibold">Dirección *</label><Field name="direccion" placeholder="Cantón, distrito, señas" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="direccion" component="div" className="text-xs text-rose-500 mt-1"/><div className="text-xs text-stone-400 mt-1 flex items-center gap-1"><MapPin className="w-3 h-3"/> Desde San Ramón</div></div>
+            <div><label className="text-xs font-semibold">Dirección *</label><Field name="direccion" placeholder="Cantón, distrito, señas" className="w-full mt-1 px-3 py-2.5 border border-stone-200 rounded-xl bg-stone-50 text-sm"/><ErrorMessage name="direccion" component="div" className="text-xs text-rose-500 mt-1"/><div className="text-xs text-stone-400 mt-1 flex items-center gap-1"><MapPin className="w-3 h-3"/> Desde Costa Rica</div></div>
 
             {/* Datos registrales — simplificado para gratis */}
             <div className={`border rounded-xl p-4 ${values.modalidad==='virtual' ? 'border-emerald-200 bg-emerald-50' : 'border-amber-200 bg-amber-50'}`}>
@@ -136,7 +137,7 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
                   const done = !!files[d.key] || (d.key==='plano' && !!values.numeroPlano) || (d.key==='literal' && !!values.folioReal)
                   return (
                   <label key={d.key} className={`flex flex-col gap-1 p-3 rounded-xl border bg-white ${done?'border-emerald-200':'border-stone-200'}`}>
-                    <span className="text-xs font-semibold">{d.label} {done ? <span className="text-emerald-600">✓</span> : <span className="text-stone-400">○</span>} {files[d.key] && <span className="text-emerald-600 text-xs"> {files[d.key]}</span>}</span>
+                    <span className="text-xs font-semibold">{d.label} {done ? <span className="text-emerald-600">✓</span> : <span className="text-stone-400">○</span>} {files[d.key] && <span className="text-emerald-600 text-xs"> {(files[d.key] as File).name}</span>}</span>
                     <input type="file" accept={d.accept} onChange={e=> onFile(d.key, e)} className="text-xs file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:bg-[#1a120e] file:text-white"/>
                     <span className="text-xs text-stone-400">{(d as any).note || ''}</span>
                   </label>
@@ -168,3 +169,4 @@ export default function EvaluationForm({ compact=false }: { compact?: boolean })
     </div>
   )
 }
+

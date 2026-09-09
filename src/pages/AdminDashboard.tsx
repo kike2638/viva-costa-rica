@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { useAvaluoStore, type AvaluoStatus, type PagoStatus } from '../store/avaluos'
 import AdminLayout from '../components/AdminLayout'
 import AdminAssistant from '../components/AdminAssistant'
@@ -17,7 +17,8 @@ const statusColor: Record<AvaluoStatus,string> = {
 const pagoColor: Record<PagoStatus,string> = { no_aplica:'bg-stone-100 text-stone-600 border-stone-200', pendiente:'bg-amber-100 text-amber-800 border-amber-200', pagado:'bg-emerald-100 text-emerald-800 border-emerald-200', reembolsado:'bg-rose-100 text-rose-800 border-rose-200' }
 
 export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'list'}){
-  const { avaluos, updateAvaluo, deleteAvaluo } = useAvaluoStore()
+  const { avaluos, loading, error, loadAvaluos, updateAvaluo, deleteAvaluo } = useAvaluoStore()
+  useEffect(()=> { loadAvaluos() }, [loadAvaluos])
   const [q,setQ]=useState('')
   const [f,setF]=useState<AvaluoStatus|'todos'>('todos')
   const [expanded,setExpanded]=useState<string|null>(null)
@@ -60,7 +61,7 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
       {mode==='dashboard' && (
         <>
           <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div><h1 className="text-2xl font-extrabold text-stone-900">Dashboard — Terra Capital</h1><p className="text-sm text-stone-500">Perito 20 años · Base San Ramón · Control desplazamiento y pago previo</p></div>
+            <div><h1 className="text-2xl font-extrabold text-stone-900">Dashboard — Viva Costa Rica</h1><p className="text-sm text-stone-500">Perito 20 años · Base Costa Rica · Control desplazamiento y pago previo</p></div>
             <a href="/evaluacion" target="_blank" className="px-4 py-2 rounded-full bg-[#8c6239] text-white text-sm font-semibold">+ Nuevo avalúo (sitio)</a>
           </div>
 
@@ -79,14 +80,14 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
             <div className="bg-white border border-stone-200 rounded-2xl p-5">
               <h3 className="font-semibold text-sm text-stone-900 mb-3">Modalidad (gratis vs pago)</h3>
               <div className="h-[220px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={byModalidad}><CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4"/><XAxis dataKey="tipo" tick={{fontSize:12}}/><YAxis tick={{fontSize:12}}/><Tooltip/><Bar dataKey="count" fill="#8c6239" radius={[8,8,0,0]}/></BarChart></ResponsiveContainer></div>
-              <p className="text-xs text-stone-500 mt-2">Virtual = gratis (fotos cliente, sin despl.). Presencial/Hipotecario = con visita San Ramón.</p>
+              <p className="text-xs text-stone-500 mt-2">Virtual = gratis (fotos cliente, sin despl.). Presencial/Hipotecario = con visita Costa Rica.</p>
             </div>
           </div>
           <details className="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 open:bg-white">
             <summary className="font-bold text-sm text-stone-900 cursor-pointer list-none flex items-center justify-between">🔒 Perito 20 años — exclusivo SuperAdmin (click para ver) <span className="text-xs text-stone-500">CFIA IC-11247 · 1.850 informes</span></summary>
             <div className="mt-4"><PeritoSection/></div>
             <div className="mt-3 bg-sky-50 border border-sky-200 rounded-xl p-3 text-xs text-sky-800">
-              <b>Bancos (hipotecario):</b> el virtual <b>NO es válido SUGEF</b>. Para hipotecario debes derivar a perito físico CFIA (tú como gestor San Ramón + perito firmante). Flujo: cliente pide hipotecario → cobras → asignas a <b>Ing. Patricia Mora (física, visita)</b> → ella firma informe. Tú facturas y le pagas honorario (ej. 60/40). Así no necesitas ser perito aún.
+              <b>Bancos (hipotecario):</b> el virtual <b>NO es válido SUGEF</b>. Para hipotecario debes derivar a perito físico CFIA (tú como gestor Costa Rica + perito firmante). Flujo: cliente pide hipotecario → cobras → asignas a <b>Ing. Patricia Mora (física, visita)</b> → ella firma informe. Tú facturas y le pagas honorario (ej. 60/40). Así no necesitas ser perito aún.
             </div>
           </details>
         </>
@@ -94,7 +95,7 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
 
       <div className="bg-white border border-stone-200 rounded-2xl p-4">
         <div className="flex flex-wrap gap-3 items-center justify-between mb-4">
-          <h2 className="font-bold text-stone-900">{mode==='dashboard' ? 'Últimos avalúos' : 'Todos los avalúos'} — {filtered.length}</h2>
+          <h2 className="font-bold text-stone-900 flex items-center gap-2">{mode==='dashboard' ? 'Últimos avalúos' : 'Todos los avalúos'} — {filtered.length} {loading && <span className="text-xs font-normal text-stone-400">cargando...</span>} {error && <span className="text-xs font-normal text-rose-500">offline (local)</span>}</h2>
           <div className="flex gap-2">
             <div className="relative"><Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"/><input value={q} onChange={e=>setQ(e.target.value)} placeholder="Buscar cliente, ID, modalidad..." className="pl-9 pr-3 py-2 bg-stone-50 border border-stone-200 rounded-xl text-sm outline-none focus:bg-white focus:ring-2 focus:ring-[#a67c52] w-[240px]"/></div>
             <div className="relative flex items-center gap-2 border border-stone-200 rounded-xl px-3 bg-stone-50"><Filter className="w-4 h-4 text-stone-500"/><select value={f} onChange={e=>setF(e.target.value as any)} className="bg-transparent text-sm outline-none py-2"><option value="todos">Todos</option><option value="pendiente">Pendiente</option><option value="pendiente_pago">Pendiente pago</option><option value="pagado">Pagado</option><option value="visita_agendada">Visita agendada</option><option value="en_revision">En revisión</option><option value="tasado">Tasado</option><option value="entregado">Entregado</option><option value="rechazado">Rechazado</option></select></div>
@@ -165,10 +166,10 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
       <div className="grid lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-2">
           <div className="text-xs text-stone-700 bg-white border border-stone-200 rounded-xl p-4">
-            <b className="text-stone-900">Flujo 20 años (San Ramón):</b>
+            <b className="text-stone-900">Flujo 20 años (Costa Rica):</b>
             <ol className="list-decimal list-inside mt-2 space-y-1 text-stone-600">
               <li><b>Virtual gratis:</b> sin visita, entrega 24h, no SUGEF. Metodología auto: Comparación rápida.</li>
-              <li><b>Presencial/Hipotecario:</b> ₡45k/₡95k + despl. San Ramón +30% express → <b>pendiente_pago</b>. Docs obligatorios: plano+literal+cédula (checklist).</li>
+              <li><b>Presencial/Hipotecario:</b> ₡45k/₡95k + despl. Costa Rica +30% express → <b>pendiente_pago</b>. Docs obligatorios: plano+literal+cédula (checklist).</li>
               <li>Admin marca <b>pagado</b> → asigna perito Patricia Mora (20 años) + metodología IVS → <b>visita_agendada</b> → <b>tasado/entregado</b> 6 meses validez.</li>
             </ol>
           </div>
@@ -176,8 +177,9 @@ export default function AdminDashboard({mode='dashboard'}:{mode?:'dashboard'|'li
         <div><AdminAssistant/></div>
       </div>
       <div className="mt-4 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl p-3">
-        <b>Login aislado:</b> <code>/admin/login</code> no está en nav público (Header/Footer sin link). Solo acceso directo. Protegido por <code>Protected</code> en <code>src/App.tsx:13</code> con <code>useAuthStore</code>. Persistencia actual <code>terra-avaluos-v4-perito</code> → migrar a Vercel Postgres/Blob (<code>api/avaluos.js</code> + <code>vercel.json</code>).
+        <b>Stack:</b> Vercel Postgres + Blob (<code>api/avaluos.js</code> + <code>api/upload.js</code>) —fallback localStorage <code>viva-avaluos-v1</code> si no hay DB. Docs en <code>sql/schema.sql</code>.
       </div>
     </AdminLayout>
   )
 }
+

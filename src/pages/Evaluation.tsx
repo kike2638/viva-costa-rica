@@ -1,4 +1,4 @@
-import EvaluationForm from '../components/EvaluationForm'
+﻿import EvaluationForm from '../components/EvaluationForm'
 import { ClipboardCheck, Home, BadgeCheck, Info, CreditCard } from 'lucide-react'
 import { AVALUO_MODALIDADES } from '../utils/constants'
 
@@ -6,7 +6,7 @@ export default function Evaluation(){
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="text-center max-w-3xl mx-auto">
-        <span className="inline-flex px-3 py-1 rounded-full bg-[#f4f1ec] text-[#8c6239] text-xs font-semibold border border-[#e8ddd0]">Terra Capital · Avalúos certificados CFIA</span>
+        <span className="inline-flex px-3 py-1 rounded-full bg-[#f4f1ec] text-[#8c6239] text-xs font-semibold border border-[#e8ddd0]">Viva Costa Rica · Certified Appraisals & Investments</span>
         <h1 className="text-3xl md:text-4xl font-extrabold text-stone-900 mt-3">Avalúos con costo transparente</h1>
         <p className="text-stone-600 text-sm mt-3 leading-relaxed">La estimación virtual es <b>gratis y sin visita</b>. Los avalúos con visita presencial tienen costo porque incluyen desplazamiento, combustible y reporte CFIA. El pago se hace <b>antes</b> de agendar la visita.</p>
       </div>
@@ -50,7 +50,7 @@ export default function Evaluation(){
 
           <div className="bg-[#1a120e] rounded-2xl p-6 text-white">
             <h4 className="font-semibold">¿Dudas sobre el costo?</h4>
-            <p className="text-sm text-stone-300 mt-1">Habla con un tasador: <a href="tel:+50622223333" className="text-[#d4a574] font-semibold">+506 2222-3333</a> · info@terracapital.cr — Te calculamos desplazamiento exacto por WhatsApp.</p>
+            <p className="text-sm text-stone-300 mt-1">Habla con un tasador: <a href="tel:+50622223333" className="text-[#d4a574] font-semibold">+506 2222-3333</a> · info@vivacostarica.com — Te calculamos desplazamiento exacto por WhatsApp.</p>
           </div>
         </div>
         <div className="lg:col-span-2">
@@ -60,3 +60,4 @@ export default function Evaluation(){
     </div>
   )
 }
+

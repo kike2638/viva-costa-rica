@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+﻿import { useState, useMemo } from 'react'
 import { Bot, Send, Sparkles, AlertTriangle, FileCheck, MapPin } from 'lucide-react'
 import { PERITO_PRINCIPAL } from '../utils/constants'
 import { useAvaluoStore } from '../store/avaluos'
@@ -9,7 +9,7 @@ const quickPrompts = [
   '¿Qué metodología IVS aplico a este caso?',
   '¿Documentación suficiente o falta algo?',
   '¿Riesgo de rechazo SUGEF/banco?',
-  '¿Cómo justificar desplazamiento San Ramón?',
+  '¿Cómo justificar desplazamiento Costa Rica?',
   'Redacta conclusión para informe',
 ]
 
@@ -17,7 +17,7 @@ export default function AdminAssistant(){
   const { avaluos } = useAvaluoStore()
   const [input,setInput]=useState('')
   const [msgs,setMsgs]=useState<Msg[]>([
-    { role:'assistant', text:`Soy la asistente del perito ${PERITO_PRINCIPAL.nombre} (20 años, ${PERITO_PRINCIPAL.informes} informes). Pregúntame sobre metodología, checklist o cómo defender el valor ante banco/juzgado. Base San Ramón.` }
+    { role:'assistant', text:`Soy la asistente del perito ${PERITO_PRINCIPAL.nombre} (20 años, ${PERITO_PRINCIPAL.informes} informes). Pregúntame sobre metodología, checklist o cómo defender el valor ante banco/juzgado. Base Costa Rica.` }
   ])
   const [selectedId,setSelectedId]=useState<string>(avaluos[0]?.id || '')
 
@@ -35,8 +35,8 @@ export default function AdminAssistant(){
       ans = `${missing}Completitud ${comp}%. Checklist: ${PERITO_PRINCIPAL.checklistDocumentos.slice(0,3).join(' · ')}. Sin literal <30d o plano, SUGEF no acepta hipotecario. Avisa al cliente antes de visita.`
     } else if(low.includes('sugef') || low.includes('rechazo') || low.includes('banco')) {
       ans = `Riesgo 20 años: ${selected.pagoStatus!=='pagado' ? 'Sin pago previo — no visitar (experiencia: visitas impagas son pérdida). ' : ''}${selected.modalidad==='virtual' ? 'Virtual no válido SUGEF (6 meses vigencia, requiere independencia). ' : ''}Si usas solo 1 enfoque o comparables >12m, el banco lo devuelve. Asegura independencia (perito sin vínculo vendedor) y fotos georreferenciadas.`
-    } else if(low.includes('desplazamiento') || low.includes('san ramón')) {
-      ans = `Desde San Ramón: costo ${selected.desplazamientoCosto===0?'₡0 (local)':`₡${selected.desplazamientoCosto.toLocaleString('es-CR')}`} para ${selected.direccion}. Justifica con tabla DESPLAZAMIENTO_TARIFAS (Palmares 5k, Grecia 8k, Alajuela 12k, Heredia 18k...). Agrupa visitas por zona para optimizar. Incluye en factura como "gastos de desplazamiento" separado del honorario.`
+    } else if(low.includes('desplazamiento') || low.includes('Costa Rica')) {
+      ans = `Desde Costa Rica: costo ${selected.desplazamientoCosto===0?'₡0 (local)':`₡${selected.desplazamientoCosto.toLocaleString('es-CR')}`} para ${selected.direccion}. Justifica con tabla DESPLAZAMIENTO_TARIFAS (Palmares 5k, Grecia 8k, Alajuela 12k, Heredia 18k...). Agrupa visitas por zona para optimizar. Incluye en factura como "gastos de desplazamiento" separado del honorario.`
     } else if(low.includes('conclus') || low.includes('redacta') || low.includes('informe')) {
       ans = `Conclusión sugerida (Norma IVS N°3): "Con base en ${selected.metodologia}, inspección ${selected.fechaVisita||'pendiente'} y comparables verificados, el valor de mercado al ${new Date().toLocaleDateString('es-CR')} es ₡${(selected.valorEstimado||0).toLocaleString('es-CR')}. Metodología justificada por tipo ${selected.tipo}. Válido 6 meses SUGEF. Perito ${PERITO_PRINCIPAL.nombre} ${PERITO_PRINCIPAL.carnet}." Adjunta fotos, plano y literal.`
     } else {
@@ -81,3 +81,4 @@ export default function AdminAssistant(){
     </div>
   )
 }
+

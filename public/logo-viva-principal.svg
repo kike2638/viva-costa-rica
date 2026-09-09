@@ -1,0 +1,38 @@
+<svg width="600" height="360" viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="360" fill="#FFFFFF"/>
+  <!-- Icon: House + Palm + Sun -->
+  <g transform="translate(300,105)">
+    <!-- Sun -->
+    <circle cx="0" cy="-28" r="18" fill="#FF8C42"/>
+    <!-- House roof -->
+    <path d="M -52 18 L 0 -22 L 52 18 L 42 18 L 0 -12 L -42 18 Z" fill="#0E4A5A"/>
+    <!-- House body -->
+    <rect x="-38" y="18" width="76" height="42" rx="2" fill="#0E4A5A"/>
+    <!-- Door -->
+    <rect x="-10" y="34" width="20" height="26" rx="1.5" fill="#FFFFFF" opacity="0.95"/>
+    <circle cx="6" cy="47" r="1.8" fill="#0E4A5A"/>
+    <!-- Windows -->
+    <rect x="-30" y="28" width="14" height="14" rx="1" fill="#FFFFFF" opacity="0.9"/>
+    <rect x="16" y="28" width="14" height="14" rx="1" fill="#FFFFFF" opacity="0.9"/>
+    <line x1="-23" y1="28" x2="-23" y2="42" stroke="#0E4A5A" stroke-width="0.8"/>
+    <line x1="-30" y1="35" x2="-16" y2="35" stroke="#0E4A5A" stroke-width="0.8"/>
+    <line x1="23" y1="28" x2="23" y2="42" stroke="#0E4A5A" stroke-width="0.8"/>
+    <line x1="16" y1="35" x2="30" y2="35" stroke="#0E4A5A" stroke-width="0.8"/>
+    <!-- Palm left -->
+    <path d="M -58 28 C -68 8, -52 -8, -42 6 C -50 2, -58 12, -58 28 Z" fill="#14B8A6"/>
+    <path d="M -58 28 C -70 14, -58 -2, -46 4 C -52 6, -58 16, -58 28 Z" fill="#0D9488"/>
+    <!-- Palm right -->
+    <path d="M 58 28 C 68 8, 52 -8, 42 6 C 50 2, 58 12, 58 28 Z" fill="#14B8A6"/>
+    <path d="M 58 28 C 70 14, 58 -2, 46 4 C 52 6, 58 16, 58 28 Z" fill="#0D9488"/>
+    <!-- Trunks -->
+    <path d="M -58 28 Q -56 40, -54 60" stroke="#8B6F47" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M 58 28 Q 56 40, 54 60" stroke="#8B6F47" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <!-- Wave underline -->
+    <path d="M -48 66 Q -24 72, 0 66 Q 24 60, 48 66" stroke="#14B8A6" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.9"/>
+  </g>
+  <!-- Typography -->
+  <text x="300" y="198" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="62" font-weight="800" letter-spacing="6" fill="#0E4A5A">VIVA</text>
+  <text x="300" y="240" text-anchor="middle" font-family="Plus Jakarta Sans, Inter, sans-serif" font-size="22" font-weight="500" letter-spacing="12" fill="#14B8A6">COSTA RICA</text>
+  <line x1="220" y1="252" x2="380" y2="252" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="300" y="276" text-anchor="middle" font-family="Plus Jakarta Sans, Inter, sans-serif" font-size="11" font-weight="400" letter-spacing="4.5" fill="#9CA3AF">PROPERTIES &amp; INVESTMENTS</text>
+</svg>

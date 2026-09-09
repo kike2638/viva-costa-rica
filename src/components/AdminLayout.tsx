@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+﻿import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, ClipboardList, Building2, LogOut, Home } from 'lucide-react'
 import { useAuthStore } from '../store/auth'
 
@@ -10,8 +10,8 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
       <aside className="w-[260px] bg-[#1a120e] text-stone-200 hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-6 border-b border-white/10">
           <Link to="/" className="flex items-center gap-3">
-            <img src="/logo-icon.svg" alt="Terra Capital" className="w-9 h-9 rounded-xl" />
-            <div><div className="font-extrabold text-white leading-none">TERRA CAPITAL</div><div className="text-xs tracking-widest text-stone-400">SUPERADMIN</div></div>
+            <img src="/logo-icon.svg" alt="Viva Costa Rica" className="w-9 h-9 rounded-xl" />
+            <div><div className="font-extrabold text-white leading-none">Viva Costa Rica</div><div className="text-xs tracking-widest text-stone-400">SUPERADMIN</div></div>
           </Link>
           <div className="mt-4 text-xs text-stone-400">{user?.email}</div>
         </div>
@@ -27,7 +27,7 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
       </aside>
       <div className="flex-1 flex flex-col min-w-0">
         <div className="md:hidden bg-[#1a120e] text-white flex items-center justify-between px-4 py-3">
-          <span className="font-bold">TERRA CAPITAL · Admin</span>
+          <span className="font-bold">Viva Costa Rica · Admin</span>
           <button onClick={()=>{logout(); nav('/admin/login')}} className="text-xs bg-white/20 px-3 py-1.5 rounded-full">Salir</button>
         </div>
         <main className="flex-1 p-4 md:p-6">{children}</main>
@@ -35,3 +35,4 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
     </div>
   )
 }
+

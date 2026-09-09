@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { Menu, X, Phone, Heart, Search, Shield } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -23,15 +23,15 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-stone-200">
       <div className="bg-[#1a120e] text-white text-sm hidden md:block">
         <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
-          <span className="flex items-center gap-2 text-stone-200"><Phone className="w-4 h-4"/> +506 2222-3333 · info@terracapital.cr · San Ramón, Alajuela</span>
-          <span className="text-stone-400 flex items-center gap-3">Base San Ramón · Lun-Vie 8am-6pm {isAuthenticated && <Link to="/admin" className="bg-amber-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1"><Shield className="w-3 h-3"/> Panel Admin</Link>}</span>
+          <span className="flex items-center gap-2 text-stone-200"><Phone className="w-4 h-4"/> +506 2222-3333 · info@vivacostarica.com · Costa Rica</span>
+          <span className="text-stone-400 flex items-center gap-3">Base Costa Rica · Lun-Vie 8am-6pm {isAuthenticated && <Link to="/admin" className="bg-amber-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1"><Shield className="w-3 h-3"/> Panel Admin</Link>}</span>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-[68px] gap-4">
           <Link to="/" className="flex items-center gap-3 shrink-0">
-            <img src="/logo-terra-capital.svg" alt="Terra Capital - Tu hogar empieza aquí" className="h-11 w-auto" />
+            <img src="/logo-viva-horizontal.svg" alt="Viva Costa Rica - Your Home in Paradise" className="h-11 w-auto" />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1">
@@ -76,3 +76,4 @@ export default function Header() {
     </header>
   )
 }
+

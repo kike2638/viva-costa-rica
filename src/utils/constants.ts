@@ -1,4 +1,4 @@
-export type PropertyType = 'casa' | 'apartamento' | 'condo' | 'lote' | 'villa';
+﻿export type PropertyType = 'casa' | 'apartamento' | 'condo' | 'lote' | 'villa';
 export type PropertyStatus = 'venta' | 'alquiler' | 'vendido';
 
 export interface Property {
@@ -32,7 +32,7 @@ export const PROPERTY_TYPES: { value: PropertyType | 'todos'; label: string }[] 
   { value: 'villa', label: 'Villa' },
 ];
 
-export const LOCATIONS = ['todos', 'San Ramón', 'Palmares', 'Naranjo', 'Grecia', 'Alajuela', 'San José', 'Escazú', 'Santa Ana', 'Heredia', 'Cartago', 'Jacó'];
+export const LOCATIONS = ['todos', 'Costa Rica', 'Palmares', 'Naranjo', 'Grecia', 'Alajuela', 'San José', 'Escazú', 'Santa Ana', 'Heredia', 'Cartago', 'Jacó'];
 
 export const PRICE_RANGES = [
   { label: 'Cualquier precio', min: 0, max: Infinity },
@@ -136,7 +136,7 @@ export const TEAM = [
   { name: 'Jorge Rojas', role: 'Director de Valoraciones', img: 'https://placehold.co/400x500/0284c7/fff?text=Jorge' },
 ];
 
-// === PERITO 20 AÑOS — Terra Capital (inspirado en peritos CR reales: CFIA 5+ años mínimo, referente ICO-3075 con 44 años/2210 informes) ===
+// === PERITO 20 AÑOS — Viva Costa Rica (inspirado en peritos CR reales: CFIA 5+ años mínimo, referente ICO-3075 con 44 años/2210 informes) ===
 export const PERITO_PRINCIPAL = {
   nombre: 'Ing. Patricia Mora Soto',
   carnet: 'CFIA IC-11247 · ICO-2840',
@@ -162,17 +162,17 @@ export const PERITO_PRINCIPAL = {
   frases20anos: 'Un avalúo mal hecho no lo rechaza el cliente, lo rechaza el banco o el juez. La experiencia es saber qué metodología defiende el valor ante quien lo cuestiona.',
 }
 
-// === TERRA CAPITAL: Modelo comercial de avalúos ===
+// === Viva Costa Rica: Modelo comercial de avalúos ===
 export type AvaluoModalidad = 'virtual' | 'presencial' | 'hipotecario'
 export const AVALUO_MODALIDADES: { value: AvaluoModalidad; label: string; desc: string; basePrice: number; badge: string }[] = [
   { value: 'virtual', label: 'Estimación Virtual — Cliente envía fotos/datos', desc: 'GRATIS sin visita: cliente envía fotos, video y datos. Rango estimado 24h. No válido SUGEF/bancos. Sin desplazamiento.', basePrice: 0, badge: 'GRATIS' },
-  { value: 'presencial', label: 'Avalúo Presencial Certificado — Con visita', desc: 'CON visita: me desplazo desde San Ramón + reporte CFIA válido venta. Entrega 48-72h. Incluye desplazamiento.', basePrice: 45000, badge: 'Desde ₡45.000' },
+  { value: 'presencial', label: 'Avalúo Presencial Certificado — Con visita', desc: 'CON visita: me desplazo desde Costa Rica + reporte CFIA válido venta. Entrega 48-72h. Incluye desplazamiento.', basePrice: 45000, badge: 'Desde ₡45.000' },
   { value: 'hipotecario', label: 'Avalúo Hipotecario Bancario — Con visita', desc: 'CON visita: inspección + fotos perito + certificado crédito. 72h. Incluye desplazamiento.', basePrice: 95000, badge: 'Desde ₡95.000' },
 ]
 
-// Base: San Ramón de Alajuela — todo se calcula desde aquí
+// Base: Costa Rica — todo se calcula desde aquí
 export const DESPLAZAMIENTO_TARIFAS: Record<string, number> = {
-  'San Ramón': 0, 'San Ramon': 0,
+  'Costa Rica': 0,
   'Palmares': 5000, 'Naranjo': 7000, 'Grecia': 8000,
   'Alajuela': 12000, 'Heredia': 18000,
   'San José': 22000, 'Escazú': 22000, 'Santa Ana': 22000, 'Curridabat': 25000,
@@ -216,3 +216,4 @@ export const getEnfoquesRequeridos = (tipo: string): string[] => {
   if (['casa','apartamento','condo','villa'].includes(tipo)) return ['Comparación de Mercado','Costo de Reposición']
   return ['Comparación de Mercado']
 }
+
