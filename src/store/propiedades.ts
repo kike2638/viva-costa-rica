@@ -48,7 +48,7 @@ export const usePropiedadStore = create<State>()(persist((set,get)=> ({
   },
   updatePropiedad: (id, patch) => set({ propiedades: get().propiedades.map(x=> x.id===id ? {...x,...patch}: x)}),
   deletePropiedad: (id) => set({ propiedades: get().propiedades.filter(x=> x.id!==id)}),
-}), { name: 'terra-propiedades-v2-galeria' }))
+}), { name: 'terra-propiedades-v3-unsplash' }))
 
 export const getDesfase = (p: AdminPropiedad) => {
   if(!p.valorAvaluo) return null
