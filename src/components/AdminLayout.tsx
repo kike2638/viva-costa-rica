@@ -1,5 +1,5 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, ClipboardList, Building2, LogOut, Mountain, Home } from 'lucide-react'
+import { LayoutDashboard, ClipboardList, Building2, LogOut, Home } from 'lucide-react'
 import { useAuthStore } from '../store/auth'
 
 export default function AdminLayout({children}:{children:React.ReactNode}){
@@ -10,7 +10,7 @@ export default function AdminLayout({children}:{children:React.ReactNode}){
       <aside className="w-[260px] bg-[#1a120e] text-stone-200 hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-6 border-b border-white/10">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#8c6239] flex items-center justify-center text-white"><Mountain className="w-5 h-5"/></div>
+            <img src="/logo-icon.svg" alt="Terra Capital" className="w-9 h-9 rounded-xl" />
             <div><div className="font-extrabold text-white leading-none">TERRA CAPITAL</div><div className="text-xs tracking-widest text-stone-400">SUPERADMIN</div></div>
           </Link>
           <div className="mt-4 text-xs text-stone-400">{user?.email}</div>
