@@ -1,0 +1,33 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="112" fill="#0E4A5A"/>
+  <!-- Sun -->
+  <circle cx="256" cy="148" r="36" fill="#FF8C42"/>
+  <!-- Sun rays -->
+  <g stroke="#FF8C42" stroke-width="3" stroke-linecap="round" opacity="0.6">
+    <line x1="256" y1="96" x2="256" y2="80"/>
+    <line x1="292" y1="112" x2="304" y2="100"/>
+    <line x1="308" y1="148" x2="324" y2="148"/>
+    <line x1="292" y1="184" x2="304" y2="196"/>
+    <line x1="220" y1="184" x2="208" y2="196"/>
+    <line x1="204" y1="148" x2="188" y2="148"/>
+    <line x1="220" y1="112" x2="208" y2="100"/>
+  </g>
+  <!-- House -->
+  <path d="M 140 242 L 256 148 L 372 242 L 352 242 L 256 168 L 160 242 Z" fill="#FFFFFF"/>
+  <rect x="172" y="242" width="168" height="92" rx="6" fill="#FFFFFF"/>
+  <rect x="218" y="270" width="76" height="64" rx="3" fill="#0E4A5A"/>
+  <circle cx="282" cy="302" r="4" fill="#FFFFFF"/>
+  <rect x="186" y="260" width="22" height="22" rx="2" fill="#E0F2FE"/>
+  <rect x="304" y="260" width="22" height="22" rx="2" fill="#E0F2FE"/>
+  <!-- Palms -->
+  <g fill="#14B8A6">
+    <ellipse cx="118" cy="268" rx="28" ry="14" transform="rotate(-22 118 268)"/>
+    <ellipse cx="394" cy="268" rx="28" ry="14" transform="rotate(22 394 268)"/>
+  </g>
+  <path d="M 118 268 Q 122 300, 126 334" stroke="#F5E6CC" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M 394 268 Q 390 300, 386 334" stroke="#F5E6CC" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <!-- Wave -->
+  <path d="M 148 368 Q 202 384, 256 368 Q 310 352, 364 368" stroke="#14B8A6" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <!-- VCR letters subtle -->
+  <text x="256" y="438" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="34" font-weight="800" letter-spacing="14" fill="#FFFFFF" opacity="0.92">VCR</text>
+</svg>

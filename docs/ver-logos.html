@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Viva Costa Rica — Logos</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800&family=Plus+Jakarta+Sans:wght@500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#F8FAFC;color:#0E4A5A;padding:40px}
+h1{font-family:'Playfair Display',serif;font-size:32px;letter-spacing:4px;text-align:center;margin-bottom:6px}
+.sub{color:#14B8A6;letter-spacing:6px;font-size:12px;text-align:center;margin-bottom:40px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:1100px;margin:0 auto}
+.card{background:#fff;border-radius:16px;padding:28px;box-shadow:0 4px 24px rgba(14,74,90,0.08);text-align:center}
+.card.dark{background:#0E4A5A}
+.card h3{font-size:11px;letter-spacing:3px;color:#9CA3AF;margin-bottom:18px}
+.card img{max-width:100%;height:auto;display:block;margin:0 auto}
+.badge{display:inline-block;margin-top:16px;background:#F0FDFA;color:#0F766E;font-size:10px;font-weight:600;letter-spacing:1px;padding:6px 12px;border-radius:20px}
+.palette{display:flex;gap:12px;justify-content:center;margin:32px 0}
+.swatch{width:72px;height:72px;border-radius:12px;display:flex;align-items:end;justify-content:center;padding-bottom:8px;font-size:9px;font-weight:600;color:#fff;letter-spacing:0.5px}
+</style>
+</head>
+<body>
+<h1>VIVA COSTA RICA</h1>
+<p class="sub">PROPERTIES &amp; INVESTMENTS — vivacostarica.com</p>
+
+<div class="palette">
+  <div class="swatch" style="background:#0E4A5A">#0E4A5A Ocean</div>
+  <div class="swatch" style="background:#14B8A6">#14B8A6 Turquoise</div>
+  <div class="swatch" style="background:#FF8C42">#FF8C42 Sunset</div>
+  <div class="swatch" style="background:#F5E6CC;color:#0E4A5A">#F5E6CC Sand</div>
+  <div class="swatch" style="background:#1A472A">#1A472A Jungle</div>
+</div>
+
+<div class="grid">
+  <div class="card" style="grid-column:span 2">
+    <h3>PRINCIPAL — STACKED (Web, Papelería, Presentaciones)</h3>
+    <img src="logos/viva-costa-rica-principal.svg" alt="Principal" style="max-width:480px"/>
+    <div class="badge">Uso: Hero landing, portadas, firma email</div>
+  </div>
+  <div class="card" style="grid-column:span 2">
+    <h3>HORIZONTAL — HEADER (Navbar, Vercel header, Email)</h3>
+    <img src="logos/viva-costa-rica-horizontal.svg" alt="Horizontal"/>
+    <div class="badge">Uso: Header web 700×140 — Header.tsx</div>
+  </div>
+  <div class="card">
+    <h3>ICON — 512×512 (App, WhatsApp, Redes)</h3>
+    <img src="logos/viva-costa-rica-icon.svg" alt="Icon" style="max-width:220px"/>
+    <div class="badge">512×512 • Bordes 112px • App icon</div>
+  </div>
+  <div class="card dark">
+    <h3>FAVICON — 32×32 (Navegador, PWA)</h3>
+    <img src="logos/favicon.svg" alt="Favicon" style="width:64px;height:64px"/>
+    <div class="badge" style="background:#134E5E;color:#fff">32×32 • Reemplaza /public/favicon.svg</div>
+  </div>
+</div>
+
+<p style="text-align:center;margin-top:36px;font-size:12px;color:#6B7280;letter-spacing:1px">Tipografía: Playfair Display (VIVA) + Plus Jakarta Sans (COSTA RICA) — ya usada en tu stack Terra Capital</p>
+</body>
+</html>
