@@ -1,0 +1,7 @@
+﻿{
+  "name": "Viva Costa Rica",
+  "description": "Catálogo inmobiliario de lujo con ficha técnica instantánea imprimible, galería lightbox en pantalla completa, pestañas de video con dron y tour virtual 360°, geolocalización y panel de administración.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
